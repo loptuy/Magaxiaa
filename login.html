@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vastbitloud - Login / Cadastro</title>
+
+<style>
+body{
+  margin:0;
+  padding:0;
+  height:100vh;
+  font-family:Arial, sans-serif;
+  color:#fff;
+
+  background:url('bg-login.png') no-repeat center center fixed;
+  background-size:cover;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.card{
+  background:rgba(17,23,34,0.88);
+  padding:28px;
+  width:100%;
+  max-width:380px;
+  border-radius:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,.45);
+  backdrop-filter:blur(6px);
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:6px;
+  border:none;
+  background:#1a2333;
+  color:#fff;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border-radius:6px;
+  border:none;
+  background:#4da3ff;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:8px;
+}
+
+a{
+  color:#66aaff;
+  display:block;
+  margin-top:10px;
+  cursor:pointer;
+  text-align:center;
+}
+
+.hidden{ display:none; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox" class="card">
+  <h2>Entrar</h2>
+
+  <input id="phoneLogin" type="tel" placeholder="Telefone">
+  <input id="passLogin" type="password" placeholder="Senha">
+
+  <button id="btnLogin">Entrar</button>
+  <a id="linkShowRegister">Criar conta</a>
+</div>
+
+<!-- CADASTRO -->
+<div id="registerBox" class="card hidden">
+  <h2>Criar Conta</h2>
+
+  <input id="userReg" type="text" placeholder="Nome de Usuário">
+  <input id="phoneReg" type="tel" placeholder="Telefone">
+  <input id="passReg" type="password" placeholder="Senha">
+  <input id="inviteCodeReg" type="text" placeholder="Código de Convite (opcional)">
+
+  <button id="btnRegister">Cadastrar</button>
+  <a id="linkShowLogin">Já tenho conta</a>
+</div>
+
+<script>
+function showMessage(msg, ok=false){
+  const d=document.createElement('div');
+  d.textContent=msg;
+  Object.assign(d.style,{
+    position:'fixed',
+    top:'18px',
+    left:'50%',
+    transform:'translateX(-50%)',
+    padding:'10px 14px',
+    background: ok ? '#4CAF50' : '#ff4d4d',
+    color:'#fff',
+    borderRadius:'8px',
+    zIndex:9999
+  });
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),2200);
+}
+
+const loginBox=document.getElementById('loginBox');
+const registerBox=document.getElementById('registerBox');
+
+document.getElementById('linkShowRegister').addEventListener('click', ()=>{
+  loginBox.classList.add('hidden');
+  registerBox.classList.remove('hidden');
+});
+
+document.getElementById('linkShowLogin').addEventListener('click', ()=>{
+  registerBox.classList.add('hidden');
+  loginBox.classList.remove('hidden');
+});
+
+// Pega código de convite ?codigo=
+const params=new URLSearchParams(window.location.search);
+const convite=params.get('codigo');
+if(convite){
+  document.getElementById('inviteCodeReg').value=convite;
+}
+
+// CADASTRO
+document.getElementById('btnRegister').addEventListener('click', ()=>{
+  const user=document.getElementById('userReg').value.trim();
+  const phone=document.getElementById('phoneReg').value.trim();
+  const pass=document.getElementById('passReg').value.trim();
+  const invitedBy=document.getElementById('inviteCodeReg').value.trim() || null;
+
+  if(!user || !phone || !pass){
+    showMessage('Preencha todos os campos!');
+    return;
+  }
+
+  const myCode="VAST-" + Date.now().toString(36).toUpperCase();
+  const data={ user, phone, pass, myCode, invitedBy };
+
+  localStorage.setItem('vast_userdata', JSON.stringify(data));
+  localStorage.setItem('vast_logged','1');
+
+  showMessage('Conta criada com sucesso!', true);
+
+  setTimeout(()=>{
+    window.location.href='index.html';
+  },700);
+});
+
+// LOGIN
+document.getElementById('btnLogin').addEventListener('click', ()=>{
+  const phone=document.getElementById('phoneLogin').value.trim();
+  const pass=document.getElementById('passLogin').value.trim();
+
+  const data=JSON.parse(localStorage.getItem('vast_userdata') || 'null');
+
+  if(data && phone===data.phone && pass===data.pass){
+    localStorage.setItem('vast_logged','1');
+    showMessage('Login realizado!', true);
+
+    setTimeout(()=>{
+      window.location.href='index.html';
+    },700);
+
+  } else {
+    showMessage('Telefone ou senha incorretos!');
+  }
+});
+</script>
+
+</body>
+</html>

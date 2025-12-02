@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Magaxia — Página Inicial</title>
+
+<style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #0d0d0d; color: white; }
+    header { width: 100%; padding: 15px 30px; background: #000000e8; display: flex; align-items: center; border-bottom: 1px solid #222; }
+    .left { display: flex; align-items: center; gap: 15px; }
+    header img { height: 48px; }
+    header h1 { font-size: 24px; margin: 0; font-weight: 700; letter-spacing: 1px; }
+    .menu { flex: 1; display: flex; justify-content: center; gap: 14px; }
+    .menu button { background: #6a00ff; border: none; padding: 10px 18px; border-radius: 6px; color: white; font-size: 16px; cursor: pointer; transition: 0.2s; }
+    .menu button:hover { background: #8e35ff; transform: scale(1.05); }
+    .container { text-align: center; padding: 60px 20px; max-width: 900px; margin: auto; }
+    .titulo { font-size: 36px; margin-bottom: 20px; font-weight: bold; }
+    .descricao { font-size: 18px; line-height: 1.6; opacity: 0.85; margin-bottom: 40px; white-space: pre-line; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="left">
+        <img src="A_logo_for_Magaxia_is_set_against_a_pitch-black_ba.png" alt="Logo Magaxia">
+        <h1>Magaxia</h1>
+    </div>
+
+    <div class="menu">
+        <button onclick="window.location.href='https://loptuy.github.io/Magaxia/'">Produtos</button>
+
+        <!-- BOTÃO NOVO: MINHA EQUIPE (VERIFICA LOGIN) -->
+        <button id="btnMinhaEquipe">Minha Equipe</button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="titulo">Bem-vindo à Magaxia</div>
+
+    <div class="descricao">
+🚀 <b>Magaxia</b>
+Invista com propósito. Construa o futuro. Inspire novas possibilidades. 🌟
+
+💡 Magaxia não é apenas uma plataforma digital — é um ecossistema de oportunidades que conecta pessoas, ideias e crescimento real.
+Acreditamos que investir com inteligência é o primeiro passo para alcançar resultados sólidos, evolução contínua e conquistas que refletem no presente e no futuro.
+
+🌍 Invista com confiança. Fortaleça o seu amanhã. Viva o progresso com a Magaxia.
+    </div>
+</div>
+
+<script>
+  // Quando clicar no botão "Minha Equipe" verificamos estado de login.
+  document.getElementById('btnMinhaEquipe').addEventListener('click', function(){
+    const logged = localStorage.getItem('vast_logged');
+    const userData = localStorage.getItem('vast_userdata');
+
+    // Se usuário autenticado, vai direto para equipe.html
+    if(logged === '1' && userData){
+      window.location.href = 'equipe.html';
+      return;
+    }
+
+    // Caso contrário, abre a página de login (e passa a intenção de voltar para equipe)
+    // enviando um parâmetro de retorno opcional ?next=equipe
+    window.location.href = 'login.html?next=equipe';
+  });
+</script>
+
+</body>
+</html>
