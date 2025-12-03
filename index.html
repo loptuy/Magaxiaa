@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Magaxia — Página Inicial</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  color:#000;
+  background: radial-gradient(circle at top, #4da3ff, #003bff 60%, #001a66);
+  backdrop-filter: blur(6px);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 60%),
+              radial-gradient(circle at 80% 70%, rgba(255,255,255,0.20), transparent 70%);
+  pointer-events:none;
+  filter:blur(40px);
+}
+
+/* REMOVIDO o brilho passando */
+.glow-text {
+  color:#000;
+  font-weight:bold;
+}
+
+header{
+  width:100%;
+  padding:15px 30px;
+  background:rgba(255,255,255,0.32);
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid rgba(0,0,0,0.2);
+  backdrop-filter:blur(10px);
+}
+.left{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+header img{
+  height:48px;
+  border-radius:10px;
+}
+header h1{
+  font-size:26px;
+  margin:0;
+  font-weight:700;
+  letter-spacing:1px;
+  color:#000;
+}
+
+.menu{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+.menu button{
+  background:rgba(255,255,255,0.45);
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  color:#000;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.2s;
+  backdrop-filter:blur(6px);
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+}
+.menu button:hover{
+  background:white;
+  transform:scale(1.05);
+}
+
+.container{
+  text-align:center;
+  padding:60px 20px;
+  max-width:900px;
+  margin:auto;
+  backdrop-filter:blur(4px);
+}
+.titulo{
+  font-size:40px;
+  margin-bottom:20px;
+  font-weight:bold;
+}
+.descricao{
+  font-size:20px;
+  line-height:1.6;
+  opacity:0.9;
+  margin-bottom:40px;
+  white-space:pre-line;
+  color:#000;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="left">
+    <img src="logo-magaxia.png" alt="Logo Magaxia">
+    <h1 class="glow-text">Magaxia</h1>
+  </div>
+
+  <div class="menu">
+    <button onclick="window.location.href='https://loptuy.github.io/Magaxia/'">Produtos</button>
+    <button onclick="window.location.href='https://loptuy.github.io/Magaxia-Meus-Ativos/'">Meus Ativos</button>
+    <button id="btnMinhaEquipe">Minha Equipe</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="titulo glow-text">Bem-vindo à Magaxia</div>
+
+  <div class="descricao glow-text">
+🚀 Magaxia
+
+Invista na alegria. Construa o futuro. Inspire o progresso. 🌟
+
+💡 Magaxia é mais que uma plataforma digital — é um movimento que transforma ideias em oportunidades.
+
+Aqui, acreditamos que investir com propósito é o caminho para conquistar não só lucros, mas também felicidade, inovação e crescimento verdadeiro.
+
+“Nunca pare — o que você deseja está um passo depois do cansaço.”
+
+🌍 Invista na alegria. Aposte no seu futuro. Viva o agora com a Magaxia.
+  </div>
+</div>
+
+<script>
+  document.getElementById('btnMinhaEquipe').addEventListener('click', function(){
+    const logged = localStorage.getItem('vast_logged');
+    const userData = localStorage.getItem('vast_userdata');
+
+    if(logged === '1' && userData){
+      window.location.href = 'equipe.html';
+      return;
+    }
+    window.location.href = 'login.html?next=equipe';
+  });
+</script>
+
+</body>
+</html>
