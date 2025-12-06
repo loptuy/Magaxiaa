@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Minha Equipe</title>
+
+<style>
+/* ======== FUNDO AZUL BRILHOSO ======== */
+body{
+  margin:0;
+  font-family:Arial;
+  color:#fff;
+  background: radial-gradient(circle at top, #4da3ff, #003bff 60%, #001a66);
+  animation: fundoPulse 6s infinite alternate;
+}
+@keyframes fundoPulse{
+  0%{ filter: brightness(1); }
+  100%{ filter: brightness(1.25); }
+}
+
+/* brilho azul espalhado */
+body::before{
+  content:"";
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(50,150,255,0.35), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(0,120,255,0.25), transparent 70%);
+  pointer-events:none;
+  filter:blur(40px);
+}
+
+/* ========= CABEÇALHO ========== */
+.header{
+  background: rgba(0,80,255,0.35);
+  padding:28px 18px;
+  text-align:center;
+  border-bottom-left-radius:20px;
+  border-bottom-right-radius:20px;
+  color:#fff;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 18px rgba(0,140,255,0.7);
+  animation: brilho 3s infinite alternate;
+}
+
+/* ========= CAIXAS ========== */
+.container{
+  padding:18px;
+  max-width:720px;
+  margin:18px auto;
+}
+
+.card{
+  background: rgba(0,80,255,0.25);
+  padding:16px;
+  border-radius:14px;
+  margin-bottom:14px;
+  color:#fff;
+  box-shadow: 0 0 20px rgba(0,150,255,0.4);
+  border: 1px solid rgba(100,180,255,0.35);
+  backdrop-filter: blur(6px);
+  animation: brilhoLeve 4s infinite alternate;
+}
+
+/* brilho suave */
+@keyframes brilhoLeve{
+  0%{ box-shadow:0 0 14px rgba(0,150,255,0.25); }
+  100%{ box-shadow:0 0 22px rgba(0,150,255,0.55); }
+}
+
+/* ========= INPUT e BOTÃO ========== */
+input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background: rgba(0,60,255,0.45);
+  color:#fff;
+  font-size:15px;
+  box-shadow: 0 0 12px rgba(0,140,255,0.6);
+  border:1px solid rgba(120,170,255,0.4);
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:8px;
+  border:none;
+  background: linear-gradient(90deg,#4da3ff,#0044ff);
+  color:#fff;
+  cursor:pointer;
+  font-size:16px;
+  font-weight:bold;
+  box-shadow:0 0 16px rgba(0,140,255,0.6);
+  transition:.2s;
+}
+
+button:hover{
+  transform:scale(1.04);
+  box-shadow:0 0 24px rgba(0,170,255,0.9);
+}
+
+/* mensagem copiado */
+#msgCopiado{
+  color:#fff;
+  text-align:center;
+  opacity:0;
+  transition:opacity .3s;
+  margin-top:8px;
+}
+
+/* lista */
+.member{
+  background: rgba(0,60,255,0.35);
+  padding:12px;
+  border-radius:10px;
+  color:#fff;
+  margin-bottom:10px;
+  border:1px solid rgba(120,170,255,0.45);
+  box-shadow:0 0 14px rgba(0,140,255,0.5);
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>Minha Equipe</h2>
+  <p style="margin:6px 0 0;color:#fff">Acompanhe seu desempenho</p>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h3 id="bonus" style="margin:0">0</h3>
+    <div>BÔNUS</div>
+  </div>
+
+  <div class="card">
+    <h3 id="ativosCampo" style="margin:0">0</h3>
+    <div>ATIVOS</div>
+  </div>
+
+  <div class="card">
+    <h3 id="membroCampo" style="margin:0">0</h3>
+    <div>CONVIDADOS</div>
+  </div>
+
+  <div class="card">
+    <h3>Seu Código de Convite</h3>
+    <input id="linkFinal" readonly>
+    <button id="btnCopiar">Copiar link</button>
+    <div id="msgCopiado">Link copiado!</div>
+  </div>
+
+  <div class="card">
+    <h3>Membros</h3>
+    <div id="membersList" class="list"></div>
+  </div>
+
+</div>
+
+<script type="module">
+  const firebaseConfig = {
+    apiKey: "AIzaSyAcVPgUHbL4N9U1-H68klmGKWQF-YGleyc",
+    authDomain: "vastbitloud-2872a.firebaseapp.com",
+    projectId: "vastbitloud-2872a",
+    storageBucket: "vastbitloud-2872a.appspot.com",
+    messagingSenderId: "952931184412",
+    appId: "1:952931184412:web:ee2a0e38826c30dd0cd4d9",
+    measurementId: "G-KWVQ0CFHW2"
+  };
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const userData = JSON.parse(localStorage.getItem('vast_userdata')||'null');
+  const logged = localStorage.getItem('vast_logged');
+
+  if(!userData || logged !== '1'){
+    window.location.href = 'login.html?next=equipe';
+  }
+
+  const codigo = userData.myCode || '';
+
+  document.getElementById('linkFinal').value =
+    "https://loptuy.github.io/Magaxiaa/login.html?next=equipe&codigo=" +
+    encodeURIComponent(codigo);
+
+  document.getElementById('btnCopiar').addEventListener('click', async ()=>{
+
+    const text = document.getElementById('linkFinal').value;
+
+    try {
+      if(navigator.clipboard){
+        await navigator.clipboard.writeText(text);
+      } else {
+        const campo = document.getElementById('linkFinal');
+        campo.select();
+        document.execCommand('copy');
+      }
+
+      const msg = document.getElementById('msgCopiado');
+      msg.style.opacity = 1;
+      setTimeout(()=> msg.style.opacity = 0, 1600);
+
+    } catch(e){
+      console.error('Erro ao copiar:', e);
+    }
+  });
+
+  async function carregarEquipe(){
+    try {
+      const q = query(collection(db, "teams"), where("owner", "==", codigo));
+      const snap = await getDocs(q);
+
+      let count = 0;
+      const membersList = document.getElementById('membersList');
+      membersList.innerHTML = '';
+
+      snap.forEach(doc=>{
+        count++;
+        const d = doc.data();
+
+        const el = document.createElement('div');
+        el.className = 'member';
+
+        el.innerHTML = `
+          <strong>${d.memberName || d.member || '—'}</strong>
+          <div style="font-size:13px">Código: ${d.member || '—'} • Telefone: ${d.phone || '—'}</div>
+        `;
+
+        membersList.appendChild(el);
+      });
+
+      document.getElementById('membroCampo').textContent = String(count);
+
+    } catch(err){
+      console.error(err);
+      document.getElementById('membroCampo').textContent = '0';
+    }
+  }
+
+  carregarEquipe();
+</script>
+
+</body>
+</html>

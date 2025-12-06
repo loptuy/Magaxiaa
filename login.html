@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Login / Cadastro • Magaxia</title>
+<style>
+body{margin:0;padding:0;height:100vh;font-family:Arial, sans-serif;color:#fff;background:radial-gradient(circle at top,#0a1b3d 0%,#030814 70%);display:flex;align-items:center;justify-content:center;}
+.card{background:rgba(15,20,32,0.88);padding:30px;width:100%;max-width:420px;border-radius:18px;backdrop-filter:blur(12px);box-shadow:0 0 25px rgba(0,150,255,0.40);border:1px solid rgba(0,150,255,0.4)}
+h2{text-align:center;margin-top:0;margin-bottom:12px;font-size:22px;color:#7ecbff}
+input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid rgba(0,150,255,0.28);background:rgba(10,15,26,0.85);color:#bce1ff;font-size:14px}
+button{width:100%;padding:12px;margin-top:10px;border-radius:8px;border:none;font-weight:700;cursor:pointer;background:linear-gradient(90deg,#00aaff,#4dc4ff);color:#000}
+a{display:block;text-align:center;margin-top:10px;color:#7ecbff;cursor:pointer}
+.hidden{display:none}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:10px 14px;border-radius:8px;color:#fff;z-index:9999}
+</style>
+</head>
+<body>
+
+<div id="loginBox" class="card">
+  <h2>Entrar</h2>
+  <input id="phoneLogin" type="tel" placeholder="Telefone">
+  <input id="passLogin" type="password" placeholder="Senha">
+  <button id="btnLogin">Entrar</button>
+  <a id="linkShowRegister">Criar conta</a>
+</div>
+
+<div id="registerBox" class="card hidden">
+  <h2>Criar Conta</h2>
+  <input id="userReg" type="text" placeholder="Nome de Usuário">
+  <input id="phoneReg" type="tel" placeholder="Telefone">
+  <input id="passReg" type="password" placeholder="Senha">
+  <input id="inviteCodeReg" type="text" placeholder="Código de Convite (opcional)">
+  <button id="btnRegister">Cadastrar</button>
+  <a id="linkShowLogin">Já tenho conta</a>
+</div>
+
+<script type="module">
+  // SEU FIREBASE CONFIG (mantido igual ao que já está no projeto)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAcVPgUHbL4N9U1-H68klmGKWQF-YGleyc",
+    authDomain: "vastbitloud-2872a.firebaseapp.com",
+    projectId: "vastbitloud-2872a",
+    storageBucket: "vastbitloud-2872a.firebasestorage.app",
+    messagingSenderId: "952931184412",
+    appId: "1:952931184412:web:ee2a0e38826c30dd0cd4d9",
+    measurementId: "G-KWVQ0CFHW2"
+  };
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  function showMessage(msg, ok=false){
+    const d = document.createElement('div');
+    d.className = 'toast';
+    d.textContent = msg;
+    d.style.background = ok ? '#4CAF50' : '#ff4d4d';
+    document.body.appendChild(d);
+    setTimeout(()=> d.remove(),2000);
+  }
+
+  const loginBox = document.getElementById('loginBox');
+  const registerBox = document.getElementById('registerBox');
+
+  document.getElementById('linkShowRegister').addEventListener('click', ()=>{
+    loginBox.classList.add('hidden');
+    registerBox.classList.remove('hidden');
+  });
+
+  document.getElementById('linkShowLogin').addEventListener('click', ()=>{
+    registerBox.classList.add('hidden');
+    loginBox.classList.remove('hidden');
+  });
+
+  // prefill invite code from URL: ?next=equipe&codigo=XXX
+  const params = new URLSearchParams(window.location.search);
+  const prefillCodigo = params.get('codigo') || params.get('invite');
+  if(prefillCodigo){
+    document.getElementById('inviteCodeReg').value = prefillCodigo;
+  }
+
+  // REGISTRO (mantendo seu fluxo atual: grava localStorage + teams no Firestore se houver invitedBy)
+  document.getElementById('btnRegister').addEventListener('click', async ()=>{
+    const user = document.getElementById('userReg').value.trim();
+    const phone = document.getElementById('phoneReg').value.trim();
+    const pass = document.getElementById('passReg').value.trim();
+    const invitedBy = document.getElementById('inviteCodeReg').value.trim() || null;
+
+    if(!user || !phone || !pass){
+      showMessage('Preencha todos os campos!');
+      return;
+    }
+
+    const myCode = "VAST-" + Date.now().toString(36).toUpperCase();
+    // Mantemos o formato que você já usa
+    const localData = { user, phone, pass, myCode, invitedBy };
+
+    localStorage.setItem('vast_userdata', JSON.stringify(localData));
+    localStorage.setItem('vast_logged', '1');
+
+    try{
+      if(invitedBy){
+        await addDoc(collection(db, "teams"), {
+          owner: invitedBy,
+          member: myCode,
+          memberName: user,
+          phone: phone,
+          createdAt: Date.now()
+        });
+      }
+    }catch(e){
+      // não quebrar se falhar
+      console.warn('Erro ao gravar team:', e);
+    }
+
+    showMessage('Conta criada com sucesso!', true);
+    // volta para a tela de login (com delay)
+    setTimeout(()=>{
+      registerBox.classList.add('hidden');
+      loginBox.classList.remove('hidden');
+    },700);
+  });
+
+  // LOGIN (mantendo comparação com localStorage)
+  document.getElementById('btnLogin').addEventListener('click', ()=>{
+    const phone = document.getElementById('phoneLogin').value.trim();
+    const pass = document.getElementById('passLogin').value.trim();
+    const stored = JSON.parse(localStorage.getItem('vast_userdata') || 'null');
+
+    if(stored && phone === stored.phone && pass === stored.pass){
+      localStorage.setItem('vast_logged','1');
+      showMessage('Login realizado!', true);
+
+      // respeitar param next na query, ex: ?next=equipe
+      const next = params.get('next');
+      setTimeout(()=>{
+        if(next === 'equipe') window.location.href = 'equipe.html';
+        else window.location.href = 'index.html';
+      },700);
+    } else {
+      showMessage('Telefone ou senha incorretos!');
+    }
+  });
+
+  // Se já vier logado (ex: localStorage present), redireciona
+  window.addEventListener('load', ()=>{
+    try{
+      const logged = localStorage.getItem('vast_logged');
+      if(logged === '1'){
+        const next = params.get('next');
+        if(next === 'equipe') window.location.href = 'equipe.html';
+      }
+    }catch(e){}
+  });
+
+</script>
+</body>
+</html>

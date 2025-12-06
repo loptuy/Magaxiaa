@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Perfil • Magaxia</title>
+<style>
+body{font-family:Arial;background:radial-gradient(circle at top,#4da3ff,#003bff 60%,#001a66);color:#fff;min-height:100vh;padding:20px}
+.card{background: rgba(255,255,255,0.08);border-radius:14px;padding:20px;max-width:480px;margin:0 auto;backdrop-filter:blur(12px);box-shadow:0 0 14px rgba(0,150,255,0.5);animation:fadeIn 0.5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0)}}
+.btn{display:block;width:100%;padding:12px;margin-top:12px;font-weight:bold;border-radius:12px;text-align:center;cursor:pointer;transition: transform .2s, box-shadow .2s;background: linear-gradient(90deg,#00aaff,#4dc4ff);color:#000;box-shadow:0 0 12px rgba(0,160,255,0.5)}
+.btn:hover{transform: scale(1.05);box-shadow:0 0 20px rgba(0,180,255,0.7)}
+.btn-red{background: linear-gradient(90deg,#ff4d4d,#ff9999);color:#fff}
+.small{font-size:0.95rem;color:rgba(255,255,255,0.85)}
+.msg{margin-top:10px;padding:8px;border-radius:8px;background:rgba(0,0,0,0.2);color:#fff;display:none}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1 class="text-2xl font-bold text-center mb-4">Perfil do Usuário</h1>
+  <p class="small"><b>ID:</b> <span id="pid">—</span></p>
+  <p class="small"><b>Nome:</b> <span id="pname">—</span></p>
+  <p class="small"><b>Telefone:</b> <span id="pphone">—</span></p>
+  <p class="small"><b>Nível:</b> <span id="plevel">1</span></p>
+  <p class="small"><b>Status:</b> <span id="pstatus">Ativo</span></p>
+  <p class="small"><b>Data de Criação:</b> <span id="pdate">—</span></p>
+  <p class="small"><b>Código Convite:</b> <span id="pcode">—</span></p>
+
+  <button class="btn" id="btnChangePass">Trocar senha</button>
+  <button class="btn btn-red" id="btnDelete">Excluir conta</button>
+  <button class="btn" id="btnLogout">Sair</button>
+
+  <div id="message" class="msg"></div>
+</div>
+
+<script>
+(function(){
+  // Lê dados tanto de 'vast_userdata' (seu formato atual) quanto 'profile_data' (caso exista)
+  const raw = localStorage.getItem('vast_userdata') || localStorage.getItem('profile_data') || '{}';
+  const data = JSON.parse(raw || '{}');
+
+  document.getElementById("pid").textContent = data.myCode || data.id || '—';
+  document.getElementById("pname").textContent = data.user || data.name || '—';
+  document.getElementById("pphone").textContent = data.phone || data.telefone || '—';
+  document.getElementById("plevel").textContent = data.level || '1';
+  document.getElementById("pstatus").textContent = data.status || 'Ativo';
+  document.getElementById("pdate").textContent = data.createdAt ? new Date(data.createdAt).toLocaleString() : '—';
+  document.getElementById("pcode").textContent = data.myCode || data.inviteCode || '—';
+
+  function showMsg(text, t=2200){
+    const el = document.getElementById('message');
+    el.style.display = 'block';
+    el.textContent = text;
+    clearTimeout(el._t);
+    el._t = setTimeout(()=> el.style.display='none', t);
+  }
+
+  document.getElementById("btnChangePass").onclick = ()=> {
+    showMsg("Para trocar a senha, faça logout e recrie a conta (fluxo atual).");
+  };
+
+  document.getElementById("btnDelete").onclick = ()=> {
+    if(confirm("Tem certeza que deseja excluir sua conta?")) {
+      localStorage.removeItem('vast_userdata');
+      localStorage.removeItem('profile_data');
+      localStorage.removeItem('vast_logged');
+      alert("Conta excluída.");
+      window.location.href = "login.html";
+    }
+  };
+
+  document.getElementById("btnLogout").onclick = ()=> {
+    localStorage.removeItem('vast_logged');
+    window.location.href = "login.html";
+  };
+})();
+</script>
+
+</body>
+</html>
