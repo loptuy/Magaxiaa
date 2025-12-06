@@ -117,33 +117,14 @@ button:hover{
 <script type="module">
 
 /* -------------------------------
-   LER PARAMETROS DA URL
+   IGNORAR NEXT — MAS LER CODIGO DE CONVITE
 --------------------------------*/
 const params = new URLSearchParams(window.location.search);
-let next = params.get("next")?.trim() || "";
 let codigoConvite = params.get("codigo") || "";
 
-// Preenche o campo automaticamente
 if (codigoConvite) {
     document.getElementById("regConvite").value = codigoConvite;
 }
-
-/* -------------------------------
-   TELA LOGADA (NÃO APAGAR PARAMS)
---------------------------------*/
-window.addEventListener("load", () => {
-    const logged = localStorage.getItem("vast_logged");
-
-    if (logged === "1") {
-
-        if (next && next !== "") {
-            window.location.href = next + ".html";
-            return;
-        }
-
-        window.location.href = "index.html";
-    }
-});
 
 /* alternar telas */
 function mostrarCadastro(){
@@ -166,7 +147,7 @@ function showMessage(txt){
 }
 
 /* -------------------------------
-   AÇÃO LOGIN
+   LOGIN — SEMPRE VAI PARA INDEX
 --------------------------------*/
 document.getElementById("btnLogin").onclick = () => {
 
@@ -183,16 +164,12 @@ document.getElementById("btnLogin").onclick = () => {
     localStorage.setItem("vast_logged","1");
     localStorage.setItem("vast_user",u);
 
-    // redirecionar
-    if (next && next !== "") {
-        window.location.href = next + ".html";
-    } else {
-        window.location.href = "index.html";
-    }
+    // Redirecionar sempre para index
+    window.location.href = "index.html";
 };
 
 /* -------------------------------
-   AÇÃO CADASTRO — AGORA LOGA AUTOMATICO
+   CADASTRO — LOGA E VAI PARA INDEX
 --------------------------------*/
 document.getElementById("btnRegister").onclick = () => {
 
@@ -222,11 +199,7 @@ document.getElementById("btnRegister").onclick = () => {
     showMessage("Conta criada!");
 
     setTimeout(()=>{
-        if (next && next !== "") {
-            window.location.href = next + ".html";
-        } else {
-            window.location.href = "index.html";
-        }
+        window.location.href = "index.html";
     }, 700);
 
 };
