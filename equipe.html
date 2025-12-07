@@ -179,8 +179,8 @@ button:hover{
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const userData = JSON.parse(localStorage.getItem('vast_userdata')||'null');
-  const logged = localStorage.getItem('vast_logged');
+  const userData = JSON.parse(localStorage.getItem('mgx_userdata')||'null');
+  const logged = localStorage.getItem('mgx_logged');
 
   if(!userData || logged !== '1'){
     window.location.href = 'login.html?next=equipe';
@@ -251,4 +251,5 @@ button:hover{
 
 </body>
 </html>
+
 
