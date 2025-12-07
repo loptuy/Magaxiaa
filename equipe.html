@@ -182,35 +182,40 @@ button:hover{
   const userData = JSON.parse(localStorage.getItem('vast_userdata')||'null');
   const logged = localStorage.getItem('vast_logged');
 
-  if(!userData || logged !== '1'){
-    window.location.href = 'login.html?next=equipe';
+  if(!userData || logged !== "1"){
+    window.location.href = "login.html?next=equipe";
   }
 
-  const codigo = userData.myCode || '';
+  let codigo = userData.myCode || "";
 
-  document.getElementById('linkFinal').value =
+  // 🔥 Sempre troca códigos antigos VAST → MGX
+  if (codigo.startsWith("VAST-")) {
+    codigo = codigo.replace("VAST-", "MGX-");
+  }
+
+  // 🔥 Gerar link sempre com MGX
+  document.getElementById("linkFinal").value =
     "https://loptuy.github.io/Magaxiaa/login.html?next=&codigo=" +
     encodeURIComponent(codigo);
 
-  document.getElementById('btnCopiar').addEventListener('click', async ()=>{
-
-    const text = document.getElementById('linkFinal').value;
+  document.getElementById("btnCopiar").addEventListener("click", async ()=>{
+    const text = document.getElementById("linkFinal").value;
 
     try {
       if(navigator.clipboard){
         await navigator.clipboard.writeText(text);
       } else {
-        const campo = document.getElementById('linkFinal');
+        const campo = document.getElementById("linkFinal");
         campo.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
       }
 
-      const msg = document.getElementById('msgCopiado');
+      const msg = document.getElementById("msgCopiado");
       msg.style.opacity = 1;
       setTimeout(()=> msg.style.opacity = 0, 1600);
 
     } catch(e){
-      console.error('Erro ao copiar:', e);
+      console.error("Erro ao copiar:", e);
     }
   });
 
@@ -220,29 +225,29 @@ button:hover{
       const snap = await getDocs(q);
 
       let count = 0;
-      const membersList = document.getElementById('membersList');
-      membersList.innerHTML = '';
+      const membersList = document.getElementById("membersList");
+      membersList.innerHTML = "";
 
       snap.forEach(doc=>{
         count++;
         const d = doc.data();
 
-        const el = document.createElement('div');
-        el.className = 'member';
+        const el = document.createElement("div");
+        el.className = "member";
 
         el.innerHTML = `
-          <strong>${d.memberName || d.member || '—'}</strong>
-          <div style="font-size:13px">Código: ${d.member || '—'} • Telefone: ${d.phone || '—'}</div>
+          <strong>${d.memberName || d.member || "—"}</strong>
+          <div style="font-size:13px">Código: ${d.member || "—"} • Telefone: ${d.phone || "—"}</div>
         `;
 
         membersList.appendChild(el);
       });
 
-      document.getElementById('membroCampo').textContent = String(count);
+      document.getElementById("membroCampo").textContent = String(count);
 
     } catch(err){
       console.error(err);
-      document.getElementById('membroCampo').textContent = '0';
+      document.getElementById("membroCampo").textContent = "0";
     }
   }
 
