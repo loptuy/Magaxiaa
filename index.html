@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Magaxia — Página Inicial</title>
+
 <style>
   :root{
     --bg1:#4da3ff;
@@ -16,8 +17,14 @@
     --btn-hover-shadow:0 0 22px rgba(0,160,255,0.8);
   }
 
-  *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+  }
 
+  /* 🔥 FUNDO FUTURISTA + ANIMAÇÃO (importado do primeiro HTML) */
   body{
     background: radial-gradient(circle at top, var(--bg1), var(--bg2) 60%, var(--bg3));
     min-height:100vh;
@@ -41,16 +48,17 @@
   }
 
   @keyframes glowPulse{
-    0%{opacity:0.6;transform:scale(1);}
-    50%{opacity:0.8;transform:scale(1.02);}
-    100%{opacity:0.6;transform:scale(1);}
+    0%{opacity:0.6; transform:scale(1);}
+    50%{opacity:0.8; transform:scale(1.02);}
+    100%{opacity:0.6; transform:scale(1);}
   }
 
   @keyframes fadeIn{
-    from{opacity:0;transform:translateY(15px)}
-    to{opacity:1;transform:translateY(0)}
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
   }
 
+  /* 🔥 HEADER COM VIDRO E GLOW (igual ao primeiro HTML) */
   header{
     padding:18px 26px;
     display:flex;
@@ -111,21 +119,23 @@
     box-shadow: var(--btn-hover-shadow);
   }
 
+  /* 🔥 GRID ORIGINAL - NÃO ALTERADO */
   .actions-area{
     display:grid;
     grid-template-columns:repeat(2,1fr);
-    gap:22px;
-    max-width:800px;
-    margin:80px auto;
-    padding:0 20px;
+    gap:16px;
+    max-width:700px;
+    margin:40px auto;
+    padding:0 16px;
     position:relative;
     z-index:10;
   }
 
+  /* 🔥 BOTÕES PEQUENOS (seu ajuste aprovado) */
   .action-card{
     background:var(--glass);
-    padding:30px 20px;
-    border-radius:var(--radius);
+    padding:18px 10px;
+    border-radius:14px;
     text-align:center;
     border:1px solid rgba(255,255,255,0.2);
     backdrop-filter:blur(10px);
@@ -133,6 +143,7 @@
     transition:0.25s;
     font-weight:700;
     color:var(--text);
+    font-size:15px;
   }
 
   .action-card:hover{
@@ -141,14 +152,33 @@
   }
 
   .icon{
-    font-size:46px;
-    margin-bottom:10px;
+    font-size:30px;
+    margin-bottom:6px;
     filter:drop-shadow(0 0 8px rgba(0,220,255,1));
-    transition: transform 0.25s ease;
+    transition:transform 0.25s ease;
   }
 
   .action-card:hover .icon{
     transform:scale(1.2);
+  }
+
+  @media(max-width:600px){
+    .actions-area{
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      max-width:360px;
+    }
+
+    .action-card{
+      padding:14px 6px;
+      font-size:14px;
+      border-radius:12px;
+    }
+
+    .icon{
+      font-size:26px;
+      margin-bottom:4px;
+    }
   }
 
   .hero{
@@ -164,13 +194,8 @@
   }
 
   @media (max-width:700px){
-    .actions-area{
-      grid-template-columns:1fr;
-      gap:18px;
-      margin-top:60px;
-    }
-    .hero{font-size:18px; padding:15px}
-    .brand-title{font-size:26px}
+    .hero{font-size:18px; padding:15px;}
+    .brand-title{font-size:26px;}
   }
 </style>
 </head>
@@ -188,11 +213,8 @@
   <div style="display:flex; gap:12px;">
     <a class="quick-btn" href="index.html">Início</a>
     <a class="quick-btn" href="equipe.html">Equipe</a>
-    <!-- corrigi para a publicação atual -->
-    <a class="quick-btn" href="https://loptuy.github.io/Magaxiaa/">Produtos</a>
+    <a class="quick-btn" href="https://loptuy.github.io/Magaxia/">Produtos</a>
     <a class="quick-btn" href="https://loptuy.github.io/Magaxia-Meus-Ativos/">Ativos</a>
-
-    <!-- Botão Perfil -->
     <button id="btnPerfil" class="quick-btn">Perfil</button>
   </div>
 </header>
@@ -252,5 +274,3 @@ window.addEventListener('load', function(){
 
 </body>
 </html>
-
-
