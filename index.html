@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Magaxia — Página Inicial</title>
+
+<style>
+  :root{
+    --bg1:#4da3ff;
+    --bg2:#003bff;
+    --bg3:#001a66;
+    --glass:rgba(255,255,255,0.12);
+    --glass2:rgba(255,255,255,0.25);
+    --radius:18px;
+    --text:#fff;
+    --btn-hover-shadow:0 0 22px rgba(0,160,255,0.8);
+    --nav-bg:#000a22;
+  }
+
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+  }
+
+  body{
+    background: radial-gradient(circle at top, var(--bg1), var(--bg2) 60%, var(--bg3));
+    min-height:100vh;
+    color:var(--text);
+    overflow-x:hidden;
+    position:relative;
+    padding-bottom:80px;
+    animation:fadeIn 0.8s ease;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(circle at 28% 18%, rgba(255,255,255,0.34), transparent 60%),
+      radial-gradient(circle at 82% 72%, rgba(255,255,255,0.18), transparent 70%);
+    pointer-events:none;
+    filter:blur(36px);
+    z-index:0;
+    animation:glowPulse 6s infinite alternate;
+  }
+
+  @keyframes glowPulse{
+    0%{opacity:0.6; transform:scale(1);}
+    50%{opacity:0.8; transform:scale(1.02);}
+    100%{opacity:0.6; transform:scale(1);}
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  /* TOPO */
+  header{
+    padding:18px 26px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background: rgba(255,255,255,0.14);
+    backdrop-filter: blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.15);
+    position:sticky;
+    top:0;
+    z-index:20;
+  }
+
+  .brand-wrap{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .brand-wrap img{
+    height:50px;
+    border-radius:12px;
+  }
+
+  .brand-fallback{
+    display:none;
+    width:50px;
+    height:50px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.1);
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:20px;
+  }
+
+  .brand-title{
+    font-size:30px;
+    font-weight:900;
+    color:var(--text);
+    text-shadow:0 0 8px #00c8ff;
+  }
+
+  /* CARDS */
+  .actions-area{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    max-width:700px;
+    margin:40px auto 0;
+    padding:0 16px;
+  }
+
+  @media(max-width:600px){
+    .actions-area{
+      max-width:350px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+  }
+
+  .action-card{
+    background:var(--glass);
+    padding:18px 10px;
+    border-radius:14px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.2);
+    backdrop-filter:blur(10px);
+    cursor:pointer;
+    transition:0.25s;
+    font-weight:700;
+    color:var(--text);
+    font-size:15px;
+  }
+
+  .action-card:hover{
+    transform:scale(1.07);
+    box-shadow:0 0 26px rgba(0,200,255,0.9);
+  }
+
+  .icon{
+    font-size:30px;
+    margin-bottom:6px;
+    filter:drop-shadow(0 0 8px rgba(0,220,255,1));
+    transition:transform 0.25s ease;
+  }
+
+  .action-card:hover .icon{
+    transform:scale(1.2);
+  }
+
+  /* TEXTO */
+  .hero{
+    text-align:center;
+    font-size:22px;
+    margin-top:30px;
+    text-shadow:0 0 10px #00cfff;
+    padding:20px;
+    line-height:1.6;
+    white-space:pre-line;
+    z-index:10;
+  }
+
+  @media(max-width:600px){
+    .hero{font-size:18px;}
+  }
+
+  /* MENU INFERIOR */
+  .bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:70px;
+    background:var(--nav-bg);
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    border-top:2px solid rgba(255,255,255,0.12);
+    z-index:9999;
+  }
+
+  .nav-item{
+    color:#fff;
+    font-size:13px;
+    text-align:center;
+    cursor:pointer;
+    width:20%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .nav-item-icon{
+    font-size:23px;
+    margin-bottom:3px;
+  }
+
+  .nav-item:hover{opacity:0.7;}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand-wrap">
+    <img src="logo-magaxia.png" alt="Logo Magaxia"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex'">
+    <div class="brand-fallback">MGX</div>
+    <div class="brand-title">Magaxia</div>
+  </div>
+
+  <!-- TOPO LIMPO (sem botões) -->
+  <div style="display:flex; gap:12px;"></div>
+</header>
+
+<div class="actions-area">
+  <div class="action-card" onclick="window.location='equipe.html'">
+    <div class="icon">👥</div> Minha Equipe
+  </div>
+
+  <div class="action-card" onclick="window.location='perfil.html'">
+    <div class="icon">👤</div> Meu Perfil
+  </div>
+
+  <div class="action-card" onclick="window.location='produtos.html'">
+    <div class="icon">📦</div> Produtos
+  </div>
+
+  <div class="action-card" onclick="window.location='carteira.html'">
+    <div class="icon">💰</div> Carteira
+  </div>
+</div>
+
+<div class="hero">
+🚀 Magaxia
+
+Invista na alegria. Construa o futuro. Inspire o progresso. 🌟
+
+“Nunca pare — o que você deseja está um passo depois do cansaço.”
+
+🌍 Viva o agora com a Magaxia.
+</div>
+
+<!-- MENU INFERIOR -->
+<div class="bottom-nav">
+
+  <div class="nav-item" onclick="location.href='index.html'">
+    <div class="nav-item-icon">🏠</div>
+    Início
+  </div>
+
+  <div class="nav-item" onclick="location.href='equipe.html'">
+    <div class="nav-item-icon">👥</div>
+    Equipe
+  </div>
+
+  <div class="nav-item" onclick="location.href='produtos.html'">
+    <div class="nav-item-icon">📦</div>
+    Produtos
+  </div>
+
+  <div class="nav-item" onclick="location.href='carteira.html'">
+    <div class="nav-item-icon">💰</div>
+    Carteira
+  </div>
+
+  <!-- NOVO BOTÃO ATIVOS COM ÍCONE 📊 -->
+  <div class="nav-item" onclick="location.href='ativos.html'">
+    <div class="nav-item-icon">📊</div>
+    Ativos
+  </div>
+
+  <div class="nav-item" onclick="location.href='perfil.html'">
+    <div class="nav-item-icon">👤</div>
+    Perfil
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('load', function(){
+  const img = document.querySelector('.brand-wrap img');
+  const fallback = document.querySelector('.brand-fallback');
+
+  if(img && fallback){
+    if(!img.complete || img.naturalWidth === 0){
+      img.style.display='none';
+      fallback.style.display='inline-flex';
+    }
+  }
+});
+</script>
+
+</body>
+</html>
