@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Login / Cadastro • Magaxia</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+body{
+  margin:0;padding:0;height:100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color:#fff;
+  background:radial-gradient(circle at 20% 20%,#0ae 0%,#02101f 60%,#000 100%);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.neon-border{border:1px solid rgba(0,200,255,0.4);box-shadow:0 0 25px rgba(0,200,255,0.35), inset 0 0 15px rgba(0,150,255,0.15);}
+.card{background:rgba(5,10,20,0.75);padding:35px;width:100%;max-width:440px;border-radius:20px;backdrop-filter:blur(16px);position:relative;animation:fadeIn .6s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+h2{text-align:center;margin-top:0;margin-bottom:18px;font-size:26px;font-weight:700;color:#76e0ff;text-shadow:0 0 18px #009dff;}
+.input-box{position:relative;}
+.input-box i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#76e0ff;font-size:15px;}
+input{width:100%;padding:13px 13px 13px 38px;margin:9px 0;border-radius:10px;border:1px solid rgba(0,150,255,0.28);background:rgba(8,15,30,0.9);color:#bce1ff;font-size:15px;outline:none;transition:0.25s;}
+input:focus{border-color:#00c3ff;box-shadow:0 0 12px #00c3ff;}
+button{width:100%;padding:14px;margin-top:14px;border-radius:10px;border:none;font-weight:800;cursor:pointer;font-size:15px;background:linear-gradient(90deg,#00d0ff,#4df6ff);color:#00121d;letter-spacing:1px;box-shadow:0 0 15px #00d0ff;transition:0.25s;}
+button:hover{transform:scale(1.03);box-shadow:0 0 25px #00e0ff;}
+a{text-align:center;margin-top:12px;color:#7ecbff;cursor:pointer;display:block;transition:0.25s;}a:hover{color:#b6f0ff;}
+.hidden{display:none !important;}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:10px 14px;border-radius:8px;color:#fff;z-index:9999;background:rgba(0,0,0,0.7);box-shadow:0 0 10px #000;}
+.circle{position:absolute;border-radius:50%;filter:blur(40px);opacity:0.55;}
+#c1{width:260px;height:260px;top:-60px;left:-80px;background:#00aaff;animation:pulse 6s infinite alternate ease-in-out;}
+#c2{width:200px;height:200px;bottom:-60px;right:-40px;background:#0066ff;animation:pulse 7s infinite alternate-reverse ease-in-out;}
+@keyframes pulse{from{transform:scale(0.8);}to{transform:scale(1.1);}}
+</style>
+</head>
+<body>
+<div id="c1" class="circle"></div>
+<div id="c2" class="circle"></div>
+<div id="loginBox" class="card neon-border">
+  <h2><i class="fa-solid fa-user-lock"></i> Entrar</h2>
+  <div class="input-box"><i class="fa-solid fa-phone"></i><input id="phoneLogin" type="tel" placeholder="Telefone"></div>
+  <div class="input-box"><i class="fa-solid fa-key"></i><input id="passLogin" type="password" placeholder="Senha"></div>
+  <button id="btnLogin"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+  <a id="linkShowRegister" class="neon-link">Criar conta</a>
+</div>
+<div id="registerBox" class="card neon-border hidden">
+  <h2><i class="fa-solid fa-user-plus"></i> Criar Conta</h2>
+  <div class="input-box"><i class="fa-solid fa-user"></i><input id="userReg" type="text" placeholder="Nome de Usuário"></div>
+  <div class="input-box"><i class="fa-solid fa-phone"></i><input id="phoneReg" type="tel" placeholder="Telefone"></div>
+  <div class="input-box"><i class="fa-solid fa-shield-halved"></i><input id="passReg" type="password" placeholder="Senha"></div>
+  <div class="input-box"><i class="fa-solid fa-code"></i><input id="inviteCodeReg" type="text" placeholder="Código de Convite (opcional)"></div>
+  <button id="btnRegister" type="button"><i class="fa-solid fa-check"></i> Cadastrar</button>
+  <a id="linkShowLogin">Já tenho conta</a>
+</div>
+<script type="module">
+/*
+  Mantive o trecho de Firebase (original) mas a autenticação/registro principal
+  funciona localmente (localStorage) para facilitar testes offline.
+  Se quiser, removo o Firebase ou conecto a um backend real.
+*/
+
+// se desejar manter Firebase, a import permanece (mas não é estritamente necessária)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyAcVPgUHbL4N9U1-H68klmGKWQF-YGleyc",
+  authDomain: "vastbitloud-2872a.firebaseapp.com",
+  projectId: "vastbitloud-2872a",
+  storageBucket: "vastbitloud-2872a.firebasestorage.app",
+  messagingSenderId: "952931184412",
+  appId: "1:952931184412:web:ee2a0e38826c30dd0cd4d9",
+  measurementId: "G-KWVQ0CFHW2"
+};
+try { initializeApp(firebaseConfig); } catch(e){ console.warn('Firebase init:', e); }
+
+function showMessage(msg, ok=false){
+  const d = document.createElement('div');
+  d.className = 'toast';
+  d.textContent = msg;
+  d.style.background = ok ? '#28c96b' : '#ff3b3b';
+  document.body.appendChild(d);
+  setTimeout(()=> d.remove(),2000);
+}
+
+async function registerAction(){
+  const user = document.getElementById('userReg').value.trim();
+  const phone = document.getElementById('phoneReg').value.trim();
+  const pass = document.getElementById('passReg').value.trim();
+  const invitedBy = document.getElementById('inviteCodeReg').value.trim() || null;
+
+  if(!user || !phone || !pass){ showMessage('Preencha todos os campos!'); return; }
+
+  const myCode = "VAST-" + Date.now().toString(36).toUpperCase();
+  const localData = { user, phone, pass, myCode, invitedBy };
+
+  // grava local (principal)
+  localStorage.setItem('vast_userdata', JSON.stringify(localData));
+  localStorage.setItem('vast_logged', '1');
+
+  // tenta gravar no Firestore caso esteja disponível (não bloqueia)
+  try{
+    const db = getFirestore();
+    if(invitedBy && db){
+      await addDoc(collection(db, "teams"), {
+        owner: invitedBy,
+        member: myCode,
+        memberName: user,
+        phone: phone,
+        createdAt: Date.now()
+      });
+    }
+  }catch(e){ console.warn('Erro ao gravar team:', e); }
+
+  showMessage('Conta criada com sucesso!', true);
+  setTimeout(()=>{ registerBox.classList.add('hidden'); loginBox.classList.remove('hidden'); },700);
+}
+
+const loginBox = document.getElementById('loginBox');
+const registerBox = document.getElementById('registerBox');
+
+document.getElementById('linkShowRegister').addEventListener('click', ()=>{
+  loginBox.classList.add('hidden');
+  registerBox.classList.remove('hidden');
+});
+document.getElementById('linkShowLogin').addEventListener('click', ()=>{
+  registerBox.classList.add('hidden');
+  loginBox.classList.remove('hidden');
+});
+
+// Registrar
+document.getElementById('btnRegister').addEventListener('click', registerAction);
+
+// Login (local)
+document.getElementById('btnLogin').addEventListener('click', ()=>{
+  const phone = document.getElementById('phoneLogin').value.trim();
+  const pass = document.getElementById('passLogin').value.trim();
+  const stored = JSON.parse(localStorage.getItem('vast_userdata') || 'null');
+  if(stored && phone === stored.phone && pass === stored.pass){
+    localStorage.setItem('vast_logged','1');
+    showMessage('Login realizado!', true);
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get('next');
+    setTimeout(()=>{
+      if(next === 'equipe') window.location.href = 'equipe.html';
+      else if(next === 'perfil') window.location.href = 'perfil.html';
+      else window.location.href = 'index.html';
+    },700);
+  } else {
+    showMessage('Telefone ou senha incorretos!');
+  }
+});
+
+// Prefill invite code
+const params = new URLSearchParams(window.location.search);
+const prefillCodigo = params.get('codigo') || params.get('invite');
+if(prefillCodigo){ document.getElementById('inviteCodeReg').value = prefillCodigo; }
+
+// Redirect if already logged (keep behaviour)
+window.addEventListener('load', ()=>{
+  const logged = localStorage.getItem('vast_logged');
+  if(logged === '1'){
+    const next = params.get('next');
+    if(next === 'equipe') window.location.href = 'equipe.html';
+  }
+});
+</script>
+</body>
+</html>
