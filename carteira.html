@@ -70,7 +70,7 @@ a.nav{display:inline-block;margin:8px;background:#00000033;padding:8px 12px;bord
   <h3 class="glow-text">Solicitar Saque</h3>
 
   <label for="valor">Valor do Saque</label>
-  <input type="number" id="valor" placeholder="Ex: 100">
+  <input type="text" id="valor" placeholder="Ex: 100,00">
 
   <label for="nome">Nome Completo</label>
   <input type="text" id="nome" placeholder="Seu nome completo">
@@ -91,12 +91,6 @@ a.nav{display:inline-block;margin:8px;background:#00000033;padding:8px 12px;bord
 
   <h3 class="glow-text">📜 Histórico de saques</h3>
   <div class="log-box" id="historico">Nenhum saque realizado.</div>
-
-  <hr>
-  <h4>Depósito de teste (local)</h4>
-  <p>Adicionar saldo localmente para testar (apenas desenvolvimento).</p>
-  <input id="adValor" placeholder="Valor para adicionar (ex: 100)">
-  <button id="btnAdd">Adicionar Saldo (teste)</button>
 </div>
 
 <script>
@@ -104,7 +98,6 @@ a.nav{display:inline-block;margin:8px;background:#00000033;padding:8px 12px;bord
   Carteira integrada com localStorage:
   - saldo guardado em "magaxia_saldo"
   - histórico em "saquesMagaxia"
-  - botão adicionar saldo para testes
 */
 let saldo = Number(localStorage.getItem('magaxia_saldo') || 0);
 const taxaSaque = 5;
@@ -138,6 +131,12 @@ function saqueHoje() {
     return ultimo === hoje;
 }
 
+// Função para converter valor com vírgula para número
+function parseValor(valorStr) {
+    if (!valorStr) return NaN;
+    return parseFloat(valorStr.replace(/\./g, '').replace(',', '.'));
+}
+
 document.getElementById("btnSaque").addEventListener("click", function(){
     if(saldo <= 0){
         alert("❌ Saldo insuficiente.");
@@ -149,13 +148,14 @@ document.getElementById("btnSaque").addEventListener("click", function(){
         return;
     }
 
-    let valor = Number(document.getElementById("valor").value);
+    let valorStr = document.getElementById("valor").value.trim();
+    let valor = parseValor(valorStr);
     let nome = document.getElementById("nome").value.trim();
     let tipo = document.getElementById("tipoPix").value;
     let chave = document.getElementById("chave").value.trim();
 
-    if(!valor || valor <= 0){
-        alert("Digite um valor válido.");
+    if(isNaN(valor) || valor <= 0){
+        alert("Digite um valor válido (ex: 100,50).");
         return;
     }
 
@@ -170,11 +170,11 @@ document.getElementById("btnSaque").addEventListener("click", function(){
     }
 
     // validações simples
-    if(tipo === "cpf" && !/^\d{11}$/.test(chave)){
+    if(tipo === "cpf" && !/^\d{11}$/.test(chave.replace(/\D/g, ''))){
         alert("CPF inválido! Use apenas números (11 dígitos).");
         return;
     }
-    if(tipo === "telefone" && !/^\d{10,11}$/.test(chave)){
+    if(tipo === "telefone" && !/^\d{10,11}$/.test(chave.replace(/\D/g, ''))){
         alert("Telefone inválido! Use apenas números (10 ou 11 dígitos).");
         return;
     }
@@ -189,8 +189,8 @@ document.getElementById("btnSaque").addEventListener("click", function(){
 
     let log = JSON.parse(localStorage.getItem("saquesMagaxia")) || [];
     log.push({
-        valor: valor.toFixed(2),
-        taxa: taxaSaque.toFixed(2),
+        valor: valor.toFixed(2).replace(".", ","),
+        taxa: taxaSaque.toFixed(2).replace(".", ","),
         data: new Date().toLocaleString("pt-BR")
     });
     localStorage.setItem("saquesMagaxia", JSON.stringify(log));
@@ -204,16 +204,6 @@ document.getElementById("btnSaque").addEventListener("click", function(){
 
     document.getElementById("valor").value = "";
     document.getElementById("chave").value = "";
-});
-
-document.getElementById('btnAdd').addEventListener('click', ()=>{
-  const v = Number(document.getElementById('adValor').value||0);
-  if(!v || v<=0){ alert('Digite valor válido'); return; }
-  saldo += v;
-  localStorage.setItem('magaxia_saldo', saldo);
-  atualizarSaldo();
-  alert('Saldo adicionado: R$ ' + v.toFixed(2));
-  document.getElementById('adValor').value = '';
 });
 </script>
 
