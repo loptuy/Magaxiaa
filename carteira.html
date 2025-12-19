@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Carteira — Magaxia</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  color:#000;
+  background: radial-gradient(circle at top, #4da3ff, #003bff 60%, #001a66);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-sizing:border-box;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.20), transparent 70%);
+  pointer-events:none;
+  filter:blur(40px);
+  z-index:0;
+}
+.container{
+  max-width:420px;
+  margin:40px auto;
+  background:rgba(255,255,255,0.32);
+  padding:20px;
+  border-radius:12px;
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  box-shadow:0 6px 20px rgba(0,0,0,.3);
+  position:relative;
+  z-index:1;
+}
+label{display:block;font-weight:bold;margin-top:12px;margin-bottom:4px;color:#000;}
+input, select{width:100%;padding:10px;margin-bottom:8px;border-radius:8px;border:none;background:rgba(255,255,255,0.65);backdrop-filter:blur(6px);color:#000;font-size:14px;}
+button{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;background:#4da3ff;color:#000;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+button:hover{background:#33c7ff;}
+.sucesso{display:none;margin-top:15px;padding:12px;background:#00ff88;color:#000;text-align:center;border-radius:8px;animation:fadeIn 0.6s ease;}
+@keyframes fadeIn{from{opacity:0; transform:scale(0.9);}to{opacity:1; transform:scale(1);}}
+.log-box{margin-top:25px;background:rgba(255,255,255,0.45);padding:15px;border-radius:10px;max-height:220px;overflow-y:auto;backdrop-filter:blur(6px);color:#000;}
+.log-item{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,0.1);}
+.glow-text {font-weight: bold;color: #000;text-shadow:0 0 6px rgba(255,255,255,0.9),0 0 12px rgba(255,255,255,0.7),0 0 22px rgba(255,255,255,0.6);}
+nav{max-width:980px;margin:12px auto;text-align:center}
+a.nav{display:inline-block;margin:8px;background:#00000033;padding:8px 12px;border-radius:8px;color:#fff;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div style="max-width:980px;margin:12px auto;text-align:center">
+  <a class="nav" href="index.html">⟵ Voltar</a>
+  <a class="nav" href="produtos.html">Produtos</a>
+  <a class="nav" href="ativos.html">Meus Ativos</a>
+  <a class="nav" href="login.html">Perfil</a>
+</div>
+
+<div class="container">
+  <h2 class="glow-text">💼 Carteira</h2>
+
+  <p><b>Saldo disponível:</b> R$ <span id="saldo">0,00</span></p>
+
+  <hr>
+
+  <h3 class="glow-text">Solicitar Saque</h3>
+
+  <label for="valor">Valor do Saque</label>
+  <input type="text" id="valor" placeholder="Ex: 100,00">
+
+  <label for="nome">Nome Completo</label>
+  <input type="text" id="nome" placeholder="Seu nome completo">
+
+  <label for="tipoPix">Tipo de chave Pix</label>
+  <select id="tipoPix">
+    <option value="cpf">CPF</option>
+    <option value="email">E-mail</option>
+    <option value="telefone">Telefone</option>
+  </select>
+
+  <label for="chave">Chave Pix</label>
+  <input type="text" id="chave" placeholder="Digite a chave escolhida">
+
+  <button id="btnSaque">Sacar</button>
+
+  <div style="margin-top:18px;padding:14px;border-radius:10px;
+  background:rgba(255,255,255,0.55);
+  backdrop-filter:blur(6px);
+  font-size:14px;line-height:1.6;color:#000;">
+    <div class="glow-text" style="margin-bottom:6px;">
+      💰 Política de Saques – Plataforma Kalebi SDC Capital
+    </div>
+    🔹 <b>Valor mínimo para saque:</b> R$ 30,00<br>
+    🔹 <b>Taxa de saque:</b> 6% sobre o valor solicitado<br>
+    🔹 <b>Limite diário:</b> 1 saque por dia<br>
+    🔹 <b>Horário de solicitação:</b> das 10h às 17h<br>
+    🔹 <b>Tempo de processamento:</b><br>
+    • Geralmente entre 5 e 30 minutos<br>
+    • Prazo máximo de até 24 horas<br>
+    🔹 <b>Ativação de saque:</b><br>
+    É obrigatório possuir pelo menos 1 Produto ativo
+  </div>
+
+  <div id="sucesso" class="sucesso">✅ Saque realizado com sucesso!</div>
+
+  <h3 class="glow-text">📜 Histórico de saques</h3>
+  <div class="log-box" id="historico">Nenhum saque realizado.</div>
+</div>
+
+<script>
+let saldo = 0; // SALDO FIXO SEMPRE ZERO
+
+function atualizarSaldo(){
+  document.getElementById("saldo").innerText = "0,00";
+}
+atualizarSaldo();
+
+document.getElementById("btnSaque").addEventListener("click", function(){
+  alert("❌ Saldo insuficiente. Saldo atual: R$ 0,00");
+});
+</script>
+
+</body>
+</html>
