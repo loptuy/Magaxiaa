@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Magaxia • Login / Cadastro</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
@@ -54,7 +55,6 @@ html,body{
   background:linear-gradient(180deg,#fff3b0,#ffd700,#c9a227);
   -webkit-background-clip:text;
   color:transparent;
-  text-shadow:0 6px 20px rgba(0,0,0,.6);
 }
 .subtitle{margin:16px 0;font-size:22px;color:var(--muted);text-align:center}
 .form{display:flex;flex-direction:column;gap:14px;}
@@ -94,7 +94,7 @@ html,body{
 }
 .small-note{
   font-size:12px;
-  color:rgba(255,255,255,.5);
+  color:rgba(255,255,255,.6);
   margin-top:8px;
   text-align:center;
 }
@@ -105,8 +105,8 @@ html,body{
   transform:translateX(-50%);
   padding:10px 16px;
   border-radius:10px;
-  background:#000;
   color:#fff;
+  z-index:9999;
 }
 </style>
 </head>
@@ -160,6 +160,7 @@ html,body{
     </label>
     <button class="btn">Registrar</button>
   </form>
+  <div class="small-note">Código gerado: <b id="generatedCode">—</b></div>
   <a href="#" id="linkHaveAccount" class="secondary">Já tenho conta</a>
 </div>
 
@@ -167,14 +168,21 @@ html,body{
 </div>
 
 <script>
-function toast(msg){
+/* ===============================
+   TOAST
+================================ */
+function showToast(msg, ok=true){
   const t=document.createElement('div');
   t.className='toast';
+  t.style.background = ok ? '#2ecc71' : '#ff4d4d';
   t.textContent=msg;
   document.body.appendChild(t);
-  setTimeout(()=>t.remove(),2000);
+  setTimeout(()=>t.remove(),2200);
 }
 
+/* ===============================
+   TROCA DE TELAS
+================================ */
 function switchToRegister(){
   loginBox.style.display='none';
   registerBox.style.display='block';
@@ -184,44 +192,71 @@ function switchToLogin(){
   loginBox.style.display='block';
 }
 
-loginForm.onsubmit=e=>{
+/* ===============================
+   LOGIN
+================================ */
+loginForm.addEventListener('submit', e=>{
   e.preventDefault();
-  const d=JSON.parse(localStorage.getItem('user'));
-  if(d && d.phone===phone.value && d.pass===password.value){
-    toast('Login OK');
-    location.href='index.html';
-  }else toast('Dados incorretos');
-};
+  const data=JSON.parse(localStorage.getItem('vast_userdata'));
+  if(data && data.phone===phone.value && data.pass===password.value){
+    localStorage.setItem('vast_logged','1');
+    showToast('Login realizado!');
+    const next=new URLSearchParams(location.search).get('next');
+    setTimeout(()=>{
+      if(next==='equipe') location.href='equipe.html';
+      else if(next==='perfil') location.href='perfil.html';
+      else location.href='index.html';
+    },600);
+  }else showToast('Telefone ou senha incorretos',false);
+});
 
-registerForm.onsubmit=e=>{
+/* ===============================
+   CADASTRO
+================================ */
+registerForm.addEventListener('submit', e=>{
   e.preventDefault();
   const code='VAST-'+Date.now().toString(36).toUpperCase();
-  localStorage.setItem('user',JSON.stringify({
-    name:r_name.value,
-    phone:r_phone.value,
-    pass:r_pass.value,
+  const data={
+    user:r_name.value.trim(),
+    phone:r_phone.value.trim(),
+    pass:r_pass.value.trim(),
     myCode:code,
-    invitedBy:inviteCodeReg.value||null
-  }));
-  toast('Conta criada');
-  switchToLogin();
-};
+    invitedBy:inviteCodeReg.value.trim()||null
+  };
+  localStorage.setItem('vast_userdata',JSON.stringify(data));
+  localStorage.setItem('vast_logged','1');
+  generatedCode.textContent=code;
+  showToast('Conta criada com sucesso!');
+  setTimeout(switchToLogin,800);
+});
 
+/* ===============================
+   LINKS
+================================ */
 linkCreate.onclick=e=>{e.preventDefault();switchToRegister();}
 linkHaveAccount.onclick=e=>{e.preventDefault();switchToLogin();}
 
 /* ===============================
-   PREFILL AUTOMÁTICO CONVITE
-   =============================== */
+   PREFILL CONVITE VIA LINK
+================================ */
 const params=new URLSearchParams(location.search);
 const invite=params.get('codigo')||params.get('invite')||params.get('ref');
-
 if(invite){
   inviteCodeReg.value=invite;
   prefillNotice.textContent='Código de convite detectado: '+invite;
   prefillNotice.style.display='block';
   switchToRegister();
 }
+
+/* ===============================
+   AUTO LOGIN
+================================ */
+window.addEventListener('load',()=>{
+  if(localStorage.getItem('vast_logged')==='1'){
+    const next=new URLSearchParams(location.search).get('next');
+    if(next==='equipe') location.href='equipe.html';
+  }
+});
 </script>
 </body>
 </html>
