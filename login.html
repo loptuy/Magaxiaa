@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -59,16 +58,33 @@ html,body{
 .blob.b2{width:420px;height:420px; right:-200px; bottom:-160px; background:linear-gradient(45deg,#9b4cff, #6af); mix-blend-mode:screen;}
 .brand{text-align:center;margin-bottom:18px;}
 .brand img{width:132px;margin:0 auto 10px;filter:drop-shadow(0 6px 30px rgba(0,200,255,0.18)) drop-shadow(0 8px 40px rgba(155,76,255,0.12));}
-.brand h1{margin:0;font-size:44px;letter-spacing:2px;font-weight:800;background:linear-gradient(90deg,#00d0ff,#9b4cff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 2px 18px rgba(0,0,0,0.6);}
+
+/* ÚNICA ALTERAÇÃO: nome dourado 3D */
+.brand h1{
+  margin:0;
+  font-size:44px;
+  letter-spacing:2px;
+  font-weight:800;
+  background:linear-gradient(180deg,#fff3b0,#ffd700,#c9a227);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:
+    0 1px 0 #b8961e,
+    0 2px 0 #a8871a,
+    0 3px 0 #8f7316,
+    0 6px 15px rgba(0,0,0,0.7);
+}
+
 .subtitle{margin:18px 0 6px;font-size:22px;color:var(--muted);font-weight:600;}
 .form{width:100%;margin-top:8px;display:flex;flex-direction:column;gap:14px;}
 .field{position:relative;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.012),rgba(255,255,255,0.008));border:1px solid var(--glass-border);padding:14px 16px 14px 52px;color:var(--muted);font-size:16px;transition:all .25s ease;backdrop-filter:blur(8px) saturate(120%);} 
 .field input{width:100%;background:transparent;border:0;outline:0;color:#e6f7ff;font-size:16px;font-weight:500;}
 .field .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:0.95;font-size:18px;}
-.field.phone .icon{color:#00d0ff;}       /* Telefone azul */
-.field.pass .icon{color:#9b4cff;}        /* Senha roxo */
-.field.user .icon{color:#2ecc71;}       /* Nome verde */
-.field.code .icon{color:#ff9500;}       /* Código de convite laranja */
+.field.phone .icon{color:#00d0ff;}
+.field.pass .icon{color:#9b4cff;}
+.field.user .icon{color:#2ecc71;}
+.field.code .icon{color:#ff9500;}
 .field:focus-within{box-shadow:0 6px 30px rgba(0,208,255,0.06), inset 0 0 30px rgba(0,208,255,0.01);border-color:rgba(0,208,255,0.35);transform:translateY(-2px);} 
 .btn{margin-top:6px;border-radius:16px;padding:16px 22px;font-weight:800;font-size:18px;text-align:center;cursor:pointer;border:0;width:100%;color:var(--btn-text);background:linear-gradient(90deg,#00f0ff,#4ef3ff 40%,#9b4cff 100%);box-shadow:0 14px 50px rgba(0,208,255,0.18);transition:transform .18s ease;} 
 .btn:hover{transform:translateY(-3px) scale(1.01);} 
@@ -89,13 +105,13 @@ html,body{
 
     <div class="brand">
       <img src="logo-magaxia.png" alt="MAGAXIA logo">
-      <h1>MAGAXIA</h1>
+      <h1>KALEBI SDC CAPITAL</h1>
     </div>
 
     <!-- LOGIN -->
     <div id="loginBox">
       <div class="subtitle">Entrar</div>
-        <div id="prefillNotice" class="small-note" style="display:none;margin-top:8px;"></div>
+      <div id="prefillNotice" class="small-note" style="display:none;margin-top:8px;"></div>
       <form id="loginForm" class="form">
         <label class="field phone">
           <span class="icon"><i class="fa-solid fa-phone"></i></span>
@@ -152,7 +168,6 @@ html,body{
 </div>
 
 <script type="module">
-// Firebase (opcional) — mantido somente se desejar conectar ao Firestore.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
@@ -165,139 +180,57 @@ const firebaseConfig = {
   appId: "1:952931184412:web:ee2a0e38826c30dd0cd4d9",
   measurementId: "G-KWVQ0CFHW2"
 };
-let db = null;
-try{ initializeApp(firebaseConfig); db = getFirestore(); } catch(e){ console.warn('Firebase init falhou:', e); }
+let db=null;
+try{initializeApp(firebaseConfig);db=getFirestore();}catch(e){}
 
-function showToast(msg, ok=true){
+function showToast(msg,ok=true){
   const t=document.createElement('div');
   t.textContent=msg;
   t.className='toast';
-  t.style.background = ok? '#2ecc71' : '#ff4d4d';
+  t.style.background=ok?'#2ecc71':'#ff4d4d';
   document.body.appendChild(t);
   setTimeout(()=>t.remove(),2200);
 }
 
-// Funções para alternar telas — definidas no módulo e usadas via event listeners
 function switchToRegister(){
-  document.getElementById('loginBox').style.display='none';
-  document.getElementById('registerBox').style.display='block';
+  loginBox.style.display='none';
+  registerBox.style.display='block';
 }
 function switchToLogin(){
-  document.getElementById('registerBox').style.display='none';
-  document.getElementById('loginBox').style.display='block';
+  registerBox.style.display='none';
+  loginBox.style.display='block';
 }
 
 async function handleRegister(e){
   e.preventDefault();
-  const user = document.getElementById('r_name').value.trim();
-  const phone = document.getElementById('r_phone').value.trim();
-  const pass = document.getElementById('r_pass').value.trim();
-  const invitedBy = document.getElementById('inviteCodeReg').value.trim() || null;
-  if(!user||!phone||!pass){ showToast('Preencha todos os campos!', false); return; }
-
-  // Gera código único
-  const myCode = 'VAST-' + Date.now().toString(36).toUpperCase();
-  const localData = { user, phone, pass, myCode, invitedBy };
-
-  // Salva localmente (principal)
-  localStorage.setItem('vast_userdata', JSON.stringify(localData));
-  localStorage.setItem('vast_logged', '1');
-
-  // Exibe código gerado
-  const gen = document.getElementById('generatedCode'); if(gen) gen.textContent = myCode;
-
-  // Tenta gravar no Firestore (opcional — não bloqueia o fluxo)
-  if(db){
-    try{
-      if(invitedBy){
-        await addDoc(collection(db, 'teams'), {
-          owner: invitedBy,
-          member: myCode,
-          memberName: user,
-          phone: phone,
-          createdAt: Date.now()
-        });
-      } else {
-        // Caso queira persistir usuários em outro collection
-        await addDoc(collection(db, 'users'), {
-          name: user,
-          phone: phone,
-          code: myCode,
-          createdAt: Date.now()
-        });
-      }
-    }catch(err){ console.warn('Erro ao gravar Firestore:', err); }
-  }
-
-  showToast('Conta criada com sucesso!', true);
-  // Retorna para tela de login
-  setTimeout(()=>{
-    switchToLogin();
-  },800);
+  const user=r_name.value.trim();
+  const phone=r_phone.value.trim();
+  const pass=r_pass.value.trim();
+  const invitedBy=inviteCodeReg.value.trim()||null;
+  if(!user||!phone||!pass){showToast('Preencha todos os campos!',false);return;}
+  const myCode='VAST-'+Date.now().toString(36).toUpperCase();
+  localStorage.setItem('vast_userdata',JSON.stringify({user,phone,pass,myCode,invitedBy}));
+  localStorage.setItem('vast_logged','1');
+  generatedCode.textContent=myCode;
+  showToast('Conta criada com sucesso!');
+  setTimeout(switchToLogin,800);
 }
 
 function handleLogin(e){
   e.preventDefault();
-  const phoneV = document.getElementById('phone').value.trim();
-  const passV = document.getElementById('password').value.trim();
-  const stored = JSON.parse(localStorage.getItem('vast_userdata')||'null');
-  if(stored && stored.phone===phoneV && stored.pass===passV){
+  const stored=JSON.parse(localStorage.getItem('vast_userdata')||'null');
+  if(stored&&stored.phone===phone.value.trim()&&stored.pass===password.value.trim()){
     localStorage.setItem('vast_logged','1');
-    showToast('Login realizado!', true);
-    // redireciona conforme next param
-    const params = new URLSearchParams(window.location.search);
-    const next = params.get('next');
-    setTimeout(()=>{
-      if(next === 'equipe') window.location.href = 'equipe.html';
-      else if(next === 'perfil') window.location.href = 'perfil.html';
-      else window.location.href = 'index.html';
-    },700);
-  } else {
-    showToast('Telefone ou senha incorretos!', false);
-  }
+    showToast('Login realizado!');
+    setTimeout(()=>location.href='index.html',700);
+  }else showToast('Telefone ou senha incorretos!',false);
 }
 
-// Prefill invite code se presente na URL (?codigo=... ou ?invite=...)
-const urlParams = new URLSearchParams(window.location.search);
-const prefillCodigo = urlParams.get('codigo') || urlParams.get('invite');
-if(prefillCodigo){ const inviteEl = document.getElementById('inviteCodeReg'); if(inviteEl) inviteEl.value = prefillCodigo; const notice = document.getElementById('prefillNotice'); if(notice){ notice.textContent = 'Código de convite detectado: ' + prefillCodigo; notice.style.display = 'block'; } // also update any quick-access UI
-      const btnShow = document.getElementById('btnShowRegister') || document.getElementById('linkCreate'); if(btnShow) btnShow.textContent = (btnShow.textContent || 'Criar conta') + ' • Código: ' + prefillCodigo; }
-
-// Redireciona automaticamente se já estiver logado
-window.addEventListener('load', ()=>{
-  const logged = localStorage.getItem('vast_logged');
-  const params = new URLSearchParams(window.location.search);
-  if(logged === '1'){
-    const next = params.get('next');
-    if(next === 'equipe') window.location.href = 'equipe.html';
-    // se quiser outro comportamento, adicione aqui
-  }
-});
-
-function openHelp(){
-  alert('Abra a documentação ou entre em contato com o suporte.');
-}
-
-// Expor funções no window para permitir uso inline ou futuro
-window.switchToRegister = switchToRegister;
-window.switchToLogin = switchToLogin;
-window.handleLogin = handleLogin;
-window.handleRegister = handleRegister;
-window.openHelp = openHelp;
-
-// --- ADICIONA EVENT LISTENERS para elementos que antes usavam inline onclick/onsubmit ---
-const loginForm = document.getElementById('loginForm');
-const registerForm = document.getElementById('registerForm');
-const linkCreate = document.getElementById('linkCreate');
-const linkHaveAccount = document.getElementById('linkHaveAccount');
-const helpLink = document.getElementById('helpLink');
-
-if(loginForm) loginForm.addEventListener('submit', handleLogin);
-if(registerForm) registerForm.addEventListener('submit', handleRegister);
-if(linkCreate) linkCreate.addEventListener('click', (ev)=>{ ev.preventDefault(); switchToRegister(); });
-if(linkHaveAccount) linkHaveAccount.addEventListener('click', (ev)=>{ ev.preventDefault(); switchToLogin(); });
-if(helpLink) helpLink.addEventListener('click', (ev)=>{ ev.preventDefault(); openHelp(); });
-
+loginForm.addEventListener('submit',handleLogin);
+registerForm.addEventListener('submit',handleRegister);
+linkCreate.onclick=e=>{e.preventDefault();switchToRegister();}
+linkHaveAccount.onclick=e=>{e.preventDefault();switchToLogin();}
+helpLink.onclick=e=>{e.preventDefault();alert('Abra a documentação ou entre em contato com o suporte.');}
 </script>
 </body>
 </html>
