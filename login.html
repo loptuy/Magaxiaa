@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Magaxia • Login / Cadastro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+:root{
+  --bg1:#030416;
+  --bg2:#001025;
+  --glass-border: rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;}
+html,body{
+  height:100%;
+  margin:0;
+  font-family:'Inter',system-ui;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(15,30,60,.6), transparent 10%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+  color:#e6f7ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.container{padding:50px;}
+.card{
+  width:420px;
+  max-width:95vw;
+  padding:46px;
+  border-radius:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  border:1px solid var(--glass-border);
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.brand{text-align:center;margin-bottom:18px;}
+.brand img{width:120px;margin-bottom:10px;}
+.brand h1{
+  margin:0;
+  font-size:40px;
+  font-weight:800;
+  background:linear-gradient(90deg,#00d0ff,#9b4cff);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.subtitle{text-align:center;font-size:22px;color:rgba(255,255,255,.6);margin:16px 0;}
+.form{display:flex;flex-direction:column;gap:14px;}
+.field{
+  position:relative;
+  padding:14px 16px 14px 50px;
+  border-radius:14px;
+  border:1px solid var(--glass-border);
+}
+.field input{
+  width:100%;
+  background:none;
+  border:0;
+  outline:0;
+  color:#fff;
+}
+.field .icon{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+}
+.btn{
+  padding:16px;
+  border-radius:16px;
+  border:0;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(90deg,#00f0ff,#9b4cff);
+}
+.secondary{
+  display:block;
+  text-align:center;
+  margin-top:12px;
+  color:#7de9ff;
+  text-decoration:none;
+}
+.small-note{
+  font-size:12px;
+  color:rgba(255,255,255,.5);
+  margin-top:8px;
+  text-align:center;
+}
+.toast{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:10px 16px;
+  border-radius:10px;
+  color:#fff;
+  z-index:9999;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<div class="card">
+
+<div class="brand">
+  <img src="logo-magaxia.png">
+  <h1>KALEBI SDC CAPITAL</h1>
+</div>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <div class="subtitle">Entrar</div>
+  <form id="loginForm" class="form">
+    <label class="field">
+      <span class="icon"><i class="fa fa-phone"></i></span>
+      <input id="phone" required placeholder="Telefone">
+    </label>
+    <label class="field">
+      <span class="icon"><i class="fa fa-lock"></i></span>
+      <input id="password" type="password" required placeholder="Senha">
+    </label>
+    <button class="btn">Entrar</button>
+  </form>
+  <a href="#" id="linkCreate" class="secondary">Criar conta</a>
+</div>
+
+<!-- CADASTRO -->
+<div id="registerBox" style="display:none">
+  <div class="subtitle">Criar Conta</div>
+  <div id="prefillNotice" class="small-note" style="display:none"></div>
+
+  <form id="registerForm" class="form">
+    <label class="field">
+      <span class="icon"><i class="fa fa-user"></i></span>
+      <input id="r_name" required placeholder="Nome completo">
+    </label>
+    <label class="field">
+      <span class="icon"><i class="fa fa-phone"></i></span>
+      <input id="r_phone" required placeholder="Telefone">
+    </label>
+    <label class="field">
+      <span class="icon"><i class="fa fa-lock"></i></span>
+      <input id="r_pass" type="password" required placeholder="Senha">
+    </label>
+    <label class="field">
+      <span class="icon"><i class="fa fa-tag"></i></span>
+      <input id="inviteCodeReg" placeholder="Código de convite (opcional)">
+    </label>
+    <button class="btn">Registrar</button>
+  </form>
+  <a href="#" id="linkHaveAccount" class="secondary">Já tenho conta</a>
+</div>
+
+</div>
+</div>
+
+<script type="module">
+/* ================= FIREBASE (OPCIONAL) ================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+let db=null;
+try{
+  const app=initializeApp({
+    apiKey:"AIzaSyAcVPgUHbL4N9U1-H68klmGKWQF-YGleyc",
+    authDomain:"vastbitloud-2872a.firebaseapp.com",
+    projectId:"vastbitloud-2872a"
+  });
+  db=getFirestore(app);
+}catch(e){}
+
+/* ================= UTIL ================= */
+function toast(msg,ok=true){
+  const t=document.createElement('div');
+  t.className='toast';
+  t.style.background=ok?'#2ecc71':'#ff4d4d';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2200);
+}
+
+function switchToRegister(){
+  loginBox.style.display='none';
+  registerBox.style.display='block';
+}
+function switchToLogin(){
+  registerBox.style.display='none';
+  loginBox.style.display='block';
+}
+
+/* ================= LOGIN ================= */
+loginForm.onsubmit=e=>{
+  e.preventDefault();
+  const d=JSON.parse(localStorage.getItem('vast_userdata'));
+  if(d && d.phone===phone.value && d.pass===password.value){
+    localStorage.setItem('vast_logged','1');
+    toast('Login realizado!');
+    setTimeout(()=>location.href='index.html',700);
+  }else toast('Telefone ou senha incorretos',false);
+};
+
+/* ================= REGISTRO ================= */
+registerForm.onsubmit=async e=>{
+  e.preventDefault();
+  const myCode='VAST-'+Date.now().toString(36).toUpperCase();
+  const data={
+    user:r_name.value,
+    phone:r_phone.value,
+    pass:r_pass.value,
+    myCode,
+    invitedBy:inviteCodeReg.value||null
+  };
+  localStorage.setItem('vast_userdata',JSON.stringify(data));
+  localStorage.setItem('vast_logged','1');
+
+  if(db && data.invitedBy){
+    try{
+      await addDoc(collection(db,'teams'),{
+        owner:data.invitedBy,
+        member:myCode,
+        name:data.user,
+        createdAt:Date.now()
+      });
+    }catch{}
+  }
+
+  toast('Conta criada com sucesso!');
+  switchToLogin();
+};
+
+/* ================= LINKS ================= */
+linkCreate.onclick=e=>{e.preventDefault();switchToRegister();}
+linkHaveAccount.onclick=e=>{e.preventDefault();switchToLogin();}
+
+/* ================= PREFILL CONVITE ================= */
+const p=new URLSearchParams(location.search);
+const invite=p.get('codigo')||p.get('invite')||p.get('ref');
+if(invite){
+  inviteCodeReg.value=invite;
+  prefillNotice.textContent='Código de convite detectado: '+invite;
+  prefillNotice.style.display='block';
+  switchToRegister();
+}
+</script>
+</body>
+</html>
