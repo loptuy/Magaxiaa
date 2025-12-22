@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recarga — Plataforma</title>
+  <meta name="description" content="Realize recargas de forma rápida e segura">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#3a66c7; /* azul médio */
+      --primary-dark:#08306b; /* azul escuro */
+      --bg-top:#e8f3ff; /* fundo levemente azulado */
+      --bg-bottom:#e2ecff;
+      --card:#ffffff;
+      --muted:#32486b;
+      --border:#dce7ff;
+      --success:#0a9d58;
+      --accent:#2b5be0;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Poppins, Inter, Arial, Helvetica, sans-serif;background:linear-gradient(180deg,var(--bg-top) 0%,var(--bg-bottom) 100%);color:#111;font-size:14px}
+
+    /* centraliza totalmente no meio da viewport */
+    body{display:flex;align-items:center;justify-content:center;padding:0;margin:0;min-height:100vh}
+
+    .container{max-width:420px;width:100%;display:flex;align-items:center;justify-content:center;padding:12px}
+
+    .card{background:var(--card);border-radius:14px;box-shadow:0 10px 30px rgba(10,40,100,0.12);overflow:hidden;width:100%;max-width:420px}
+
+    header{background:linear-gradient(90deg,var(--primary),var(--primary-dark));color:#fff;padding:20px;text-align:center}
+    header h1{margin:0;font-size:15px;font-weight:700}
+    .top-name{margin:0 0 8px;font-size:13px;font-weight:600;opacity:0.98;background:linear-gradient(90deg,#08306b,var(--primary));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;display:inline-block}
+    header p{margin:8px 0 0;font-size:11px;opacity:0.95}
+    .hero-sub{margin-top:8px;font-size:11px;opacity:0.95}
+    .benefits{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+    .chip{background:rgba(255,255,255,0.12);padding:5px 8px;border-radius:999px;font-size:10px}
+
+    .content{padding:18px}
+    .section-title{font-size:11px;color:var(--muted);margin:6px 0}
+
+    .values{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;align-items:stretch}
+    .value-btn{background:transparent;border:1px solid var(--border);padding:8px;border-radius:10px;font-weight:600;cursor:pointer;color:var(--muted);background-color:transparent;font-size:12px}
+    .value-btn.active{background:linear-gradient(90deg,var(--accent),var(--primary-dark));color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(121,81,255,0.18)}
+
+    .input-group{display:flex;gap:8px;align-items:center;border:1px solid var(--border);padding:8px;border-radius:10px;background:linear-gradient(180deg,rgba(150,120,255,0.03),transparent)}
+    .input-prefix{color:var(--primary);font-weight:700}
+    .amount-input{border:0;outline:0;font-size:13px;width:100%}
+
+    .method{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;border:1px solid var(--border);margin:14px 0;cursor:pointer;background:linear-gradient(180deg,rgba(155,107,255,0.03),transparent)}
+    .method.selected{border-color:var(--accent);box-shadow:0 6px 18px rgba(121,81,255,0.06)}
+
+    .confirm{width:100%;padding:10px;border-radius:10px;background:var(--accent);color:#fff;border:0;font-weight:700;cursor:pointer;transition:background .18s,transform .08s;font-size:13px}
+    .confirm:hover{background:var(--primary-dark);transform:translateY(-1px)}
+    .confirm[disabled]{opacity:0.6;cursor:default;transform:none}
+
+    .notes{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.3;text-align:center}
+    .marketing{margin-top:12px;text-align:left}
+    .marketing ul{margin:6px 0 0 6px;color:var(--muted);line-height:1.45;padding-left:18px}
+
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:#2b2340;color:#fff;padding:8px 12px;border-radius:8px;display:none;font-size:13px}
+    .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center}
+    .modal{background:#fff;padding:20px;border-radius:12px;max-width:320px;text-align:center}
+
+    @media (max-width:420px){
+      html,body{font-size:13px}
+      .container{padding:10px}
+      .values{grid-template-columns:repeat(3,1fr);gap:8px}
+      header h1{font-size:15px}
+      .value-btn{padding:10px;font-size:12px}
+      .card{max-width:95vw}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" role="main">
+      <header>
+        <p class="top-name">Kalebi SDC Capital</p>
+        <h1>Recargas Instantâneas</h1>
+          <p class="hero-sub">Recarregue rápido, com segurança e suporte 24/7 — simplicidade que gera resultado.</p>
+          <div class="benefits">
+            <div class="chip">Pagamento seguro</div>
+            <div class="chip">Confirmação em minutos</div>
+            <div class="chip">Suporte ativo</div>
+          </div>
+      </header>
+
+      <div class="content">
+        <label class="section-title">Selecione o valor</label>
+        <div class="values" role="list">
+          <button class="value-btn" data-value="25">R$ 25</button>
+          <button class="value-btn" data-value="70">R$ 70</button>
+          <button class="value-btn" data-value="100">R$ 100</button>
+          <button class="value-btn" data-value="250">R$ 250</button>
+          <button class="value-btn" data-value="400">R$ 400</button>
+          <button class="value-btn" data-value="650">R$ 650</button>
+        </div>
+
+        <label class="section-title" for="amount">Insira outro valor</label>
+          <div class="input-group">
+            <div class="input-prefix">R$</div>
+            <input id="amount" class="amount-input" inputmode="decimal" aria-label="Valor da recarga" value="25">
+          </div>
+          <div id="value-warning" style="color:#c62;margin-top:8px;display:none;font-size:13px">Atenção: somente são aceitos os valores R$ 25, R$ 70, R$ 100, R$ 250, R$ 400 e R$ 650.</div>
+
+        <label class="section-title">Método de recarga</label>
+        <div id="method" class="method selected" role="button" tabindex="0" aria-pressed="true">
+          <span>Banco de Depósitos 1</span>
+          <span>✔</span>
+        </div>
+
+        <button id="confirm" class="confirm">Confirmar</button>
+
+        <div class="marketing" style="margin-top:12px">
+          <h3 style="margin:0 0 8px 0;color:var(--primary-dark);font-size:15px">💰 Depósito Seguro e Imediato</h3>
+          <ul style="margin:6px 0 0 16px;color:var(--muted);line-height:1.5">
+            <li>✔️ O valor mínimo para depósito é de R$ 25, ideal para começar com segurança e confiança.</li>
+            <li>⏰ Os depósitos estão disponíveis 24 horas por dia, 7 dias por semana, para você investir no melhor momento.</li>
+            <li>🔒 Todos os investimentos são realizados exclusivamente pelo site oficial da plataforma, garantindo total proteção dos seus dados e do seu capital.</li>
+            <li>🚫 A equipe oficial nunca solicita transferências privadas — sua segurança é nossa prioridade.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal" id="modal">
+      <div id="modal-content">Processando pagamento…</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function(){
+      const MIN = 25;
+      const ALLOWED = [25,70,100,250,400,650];
+      const buttons = Array.from(document.querySelectorAll('.value-btn'));
+      const input = document.getElementById('amount');
+      const confirm = document.getElementById('confirm');
+      const overlay = document.getElementById('overlay');
+      const modalContent = document.getElementById('modal-content');
+      const toast = document.getElementById('toast');
+      const method = document.getElementById('method');
+      const warning = document.getElementById('value-warning');
+
+      function formatNumber(v){
+        const n = Number(String(v).replace(/[^0-9.-]+/g,'')) || 0;
+        return n.toString();
+      }
+
+      function showToast(msg, ms=3000){
+        toast.textContent = msg; toast.style.display = 'block';
+        setTimeout(()=> toast.style.display = 'none', ms);
+      }
+
+      function setActiveButton(amount){
+        buttons.forEach(b=>{
+          if(Number(b.dataset.value) === Number(amount)) b.classList.add('active'); else b.classList.remove('active');
+        });
+      }
+
+      function isAllowed(val){
+        return ALLOWED.includes(Number(val));
+      }
+
+      function updateValidation(){
+        const val = Number(formatNumber(input.value));
+        if(!isAllowed(val)){
+          warning.style.display = 'block';
+          confirm.disabled = true;
+        } else {
+          warning.style.display = 'none';
+          confirm.disabled = false;
+        }
+      }
+
+      buttons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const v = btn.dataset.value;
+          input.value = v;
+          setActiveButton(v);
+          updateValidation();
+        });
+      });
+
+      input.addEventListener('input', ()=>{
+        const v = formatNumber(input.value);
+        input.value = v;
+        setActiveButton(v);
+        updateValidation();
+      });
+
+      // Inicializa estado ativo conforme valor padrão
+      setActiveButton(input.value);
+      updateValidation();
+
+      method.addEventListener('click', ()=>{
+        method.classList.toggle('selected');
+        const pressed = method.classList.contains('selected');
+        method.setAttribute('aria-pressed', String(pressed));
+      });
+
+      confirm.addEventListener('click', ()=>{
+        const val = Number(formatNumber(input.value));
+        if(!isAllowed(val)){
+          showToast('Operação bloqueada: valor não permitido.');
+          return;
+        }
+        if(!val || val < MIN){
+          showToast('Informe um valor válido (mínimo R$ ' + MIN + ')');
+          return;
+        }
+
+        // Redirecionamento imediato se for R$25
+        if(Number(val) === 25){
+          // desabilita botão e redireciona
+          confirm.disabled = true;
+          window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69495816-33d3-48d4-bafa-a65c167a152a';
+          return;
+        }
+
+        if(Number(val) === 70){
+          // desabilita botão e redireciona para URL específica do valor 70
+          confirm.disabled = true;
+          window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6949586a-49bf-4d8f-b0a0-1ed101771660';
+          return;
+        }
+
+        if(Number(val) === 100){
+          // desabilita botão e redireciona para URL específica do valor 100
+          confirm.disabled = true;
+          window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69495891-2764-4e3e-ad35-af6038df9547';
+          return;
+        }
+
+        if(Number(val) === 250){
+          // desabilita botão e redireciona para URL específica do valor 250
+          confirm.disabled = true;
+          window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694958dd-973a-43f2-b2fc-b7a0c6cf6a09';
+          return;
+        }
+
+        if(Number(val) === 400){
+          // desabilita botão e redireciona para URL específica do valor 400
+          confirm.disabled = true;
+          window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69495911-2beb-4fa5-83fe-595cc3a11978';
+          return;
+        }
+
+        if(Number(val) === 650){
+          // desabilita botão e redireciona para URL específica do valor 650
+          confirm.disabled = true;
+          window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6949594c-d689-496c-9867-5161a1536566';
+          return;
+        }
+
+        // Envio simulado para outros valores
+        confirm.disabled = true;
+        overlay.style.display = 'flex';
+        modalContent.textContent = 'Processando pagamento de R$ ' + val + '…';
+
+        // Simula requisição assíncrona
+        setTimeout(()=>{
+          const success = Math.random() > 0.12; // 88% sucesso
+          if(success){
+            modalContent.innerHTML = '<strong style="color:'+getComputedStyle(document.documentElement).getPropertyValue('--success')+'">Pagamento confirmado</strong><p>Valor: R$ '+val+'</p>';
+            setTimeout(()=>{
+              overlay.style.display = 'none';
+              confirm.disabled = false;
+              showToast('Recarga confirmada com sucesso');
+            },1200);
+          } else {
+            modalContent.innerHTML = '<strong style="color:#c62">Falha no processamento</strong><p>Tente novamente mais tarde.</p>';
+            setTimeout(()=>{
+              overlay.style.display = 'none';
+              confirm.disabled = false;
+              showToast('Erro ao processar pagamento');
+            },1200);
+          }
+        },1500);
+      });
+    })();
+  </script>
+</body>
+</html>
