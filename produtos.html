@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produtos</title>
+
+<style>
+/* KEEP original styles as much as possible */
+body { margin: 0; font-family: Arial, sans-serif; background: radial-gradient(circle at top, #4da3ff, #003bff 60%, #001a66); color: #000; backdrop-filter: blur(4px); }
+body::before{ content:""; position:fixed; top:0; left:0; right:0; bottom:0; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 60%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.20), transparent 70%); pointer-events:none; filter:blur(40px); }
+header { background: rgba(255,255,255,0.35); padding: 20px; text-align: center; font-size: 26px; font-weight: bold; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,.3); backdrop-filter: blur(8px); }
+.glow-text { -webkit-text-fill-color: #000; text-shadow: 0 0 6px rgba(255,255,255,0.9), 0 0 12px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.7); font-weight: bold; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; padding: 20px; max-width:980px;margin:0 auto; }
+.produto { background: rgba(255,255,255,0.38); border-radius: 12px; overflow: hidden; text-align: center; box-shadow: 0 3px 12px rgba(0,0,0,.25); display: flex; flex-direction: column; backdrop-filter: blur(10px); color:#000; transition: transform .25s, box-shadow .25s; }
+.produto:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+.produto img { width: 100%; height: 160px; object-fit: cover; }
+.produto .info { padding: 12px; flex-grow: 1; }
+.produto h3 { margin: 6px 0 4px; font-size: 18px; font-weight: bold; }
+.produto p { margin: 4px 0; font-size: 16px; font-weight: bold; color:#000; }
+.produto button { margin: 12px; padding: 10px; background: #4da3ff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; color: #000; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: 0.25s; }
+.produto button:hover { background: #2e8fff; }
+a.nav { display:inline-block;margin:8px;background:#00000033;padding:8px 12px;border-radius:8px;color:#fff;text-decoration:none }
+@media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; padding: 10px; } .produto img { height: 140px; } }
+</style>
+</head>
+
+<body>
+
+<header>
+  <div style="display:flex;justify-content:space-between;align-items:center;max-width:980px;margin:0 auto;padding:0 12px;">
+    <div><span class="glow-text">Produtos Disponíveis</span></div>
+    <div style="text-align:right;font-size:13px">
+      <span style="margin-right:10px">Token: <strong id="authToken">—</strong></span>
+      <button onclick="logout()" style="background:#00000022;border:0;padding:8px;border-radius:8px;color:#fff;cursor:pointer">Logout</button>
+    </div>
+  </div>
+</header>
+
+<div style="max-width:980px;margin:12px auto;text-align:center">
+  <a class="nav" href="index.html">⟵ Voltar</a>
+  <a class="nav" href="carteira.html">Carteira</a>
+  <a class="nav" href="ativos.html">Meus Ativos</a>
+  <a class="nav" href="login.html">Perfil</a>
+</div>
+
+<div class="product-grid" id="grid">
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&h=200&q=80" alt="Inicial">
+    <div class="info">
+      <h3 class="glow-text">Inicial</h3>
+      <p class="valor">Valor: R$25</p>
+      <p>Renda Diária: R$14</p>
+      <p>Ciclo: 30 dias</p>
+    </div>
+    <button>Investir</button>
+  </div>
+
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1527430253228-e93688616381?auto=format&fit=crop&w=400&h=200&q=80" alt="Bronse">
+    <div class="info">
+      <h3 class="glow-text">Bronse</h3>
+      <p class="valor">Valor: R$70</p>
+      <p>Renda Diária: R$26</p>
+      <p>Ciclo: 30 dias</p>
+    </div>
+    <button>Investir</button>
+  </div>
+
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&h=200&q=80" alt="Prata">
+    <div class="info">
+      <h3 class="glow-text">Prata</h3>
+      <p class="valor">Valor: R$100</p>
+      <p>Renda Diária: R$37</p>
+      <p>Ciclo: 30 dias</p>
+    </div>
+    <button>Investir</button>
+  </div>
+
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=400&h=200&q=80" alt="Goud">
+    <div class="info">
+      <h3 class="glow-text">Goud</h3>
+      <p class="valor">Valor: R$250</p>
+      <p>Renda Diária: R$65</p>
+      <p>Ciclo: 30 dias</p>
+    </div>
+    <button>Investir</button>
+  </div>
+
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&h=200&q=80" alt="Pratina">
+    <div class="info">
+      <h3 class="glow-text">Pratina</h3>
+      <p class="valor">Valor: R$400</p>
+      <p>Renda Diária: R$85</p>
+      <p>Ciclo: 30 dias</p>
+    </div>
+    <button>Investir</button>
+  </div>
+
+  <div class="produto">
+    <img src="https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=400&h=200&q=80" alt="Ouro">
+    <div class="info">
+      <h3 class="glow-text">Ouro</h3>
+      <p class="valor">Valor: R$650</p>
+      <p>Renda Diária: R$125</p>
+      <p>Ciclo: 30 dias</p>
+    </div>
+    <button>Investir</button>
+  </div>
+
+</div>
+
+<script>
+/*
+  Integração: quando clicar em Investir:
+  - verifica se usuário está logado (vast_logged)
+  - se não, redireciona para login com next=produtos
+  - se sim, adiciona item em localStorage.meusAtivos (array) e redireciona para ativos.html
+*/
+function parseValor(text){
+  // extrai número de "Valor: R$30" ou "R$ 30"
+  const m = text.replace(/\./g,'').match(/(\d+(\,\d+)?|\d+(\.\d+)?)/);
+  if(!m) return 0;
+  return m[0].replace(',','.');
+}
+
+document.querySelectorAll(".produto button").forEach((btn)=>{
+  btn.addEventListener("click", ()=>{
+    const logged = localStorage.getItem('vast_logged');
+    if(logged !== '1'){
+      if(confirm('Você precisa entrar para investir. Ir para a tela de login?')){
+        window.location.href = 'login.html?next=produtos';
+      }
+      return;
+    }
+    const card = btn.closest(".produto");
+    const nome = card.querySelector("h3").innerText.trim();
+    const valorTxt = card.querySelector(".valor").innerText || card.querySelector("p").innerText;
+    const valor = parseValor(valorTxt);
+    // verifica saldo disponível antes de investir
+    function _findSaldoInfo(){
+      const keys = ['saldo','carteira_saldo','carteiraSaldo','carteira','balance','vast_saldo'];
+      for(const k of keys){
+        const v = localStorage.getItem(k);
+        if(v==null) continue;
+        // número simples
+        const n = parseFloat(String(v).replace(/\./g,'').replace(',','.'));
+        if(!isNaN(n) && String(v).match(/^\d+[\.,]?\d*$/)){
+          return {key:k, kind:'number', value: n};
+        }
+        try{
+          const obj = JSON.parse(v);
+          if(obj && typeof obj === 'object'){
+            if(typeof obj.saldo !== 'undefined'){
+              const s = parseFloat(String(obj.saldo).toString().replace(',','.'));
+              if(!isNaN(s)) return {key:k, kind:'object', prop:'saldo', value: s};
+            }
+            if(typeof obj.valor !== 'undefined'){
+              const s2 = parseFloat(String(obj.valor).toString().replace(',','.'));
+              if(!isNaN(s2)) return {key:k, kind:'object', prop:'valor', value: s2};
+            }
+          }
+        }catch(e){ }
+      }
+      return {key:null, kind:'none', value:0};
+    }
+
+    function getSaldo(){
+      const info = _findSaldoInfo();
+      return {info, saldo: (info && typeof info.value === 'number')? info.value : 0};
+    }
+
+    function setSaldo(newSaldo){
+      const info = _findSaldoInfo();
+      if(info.key){
+        if(info.kind === 'number'){
+          localStorage.setItem(info.key, String(Number(newSaldo.toFixed(2))));
+        }else if(info.kind === 'object'){
+          try{
+            const obj = JSON.parse(localStorage.getItem(info.key));
+            obj[info.prop] = Number(newSaldo.toFixed(2));
+            localStorage.setItem(info.key, JSON.stringify(obj));
+          }catch(e){
+            localStorage.setItem(info.key, String(Number(newSaldo.toFixed(2))));
+          }
+        }
+      }else{
+        // cria chave `saldo` se não existir
+        localStorage.setItem('saldo', String(Number(newSaldo.toFixed(2))));
+      }
+    }
+
+    const _saldoObj = getSaldo();
+    const saldoAtual = Number(_saldoObj.saldo);
+    if(saldoAtual < Number(valor)){
+      alert('Saldo insuficiente');
+      return;
+    }
+
+    // deduz valor do saldo
+    setSaldo(saldoAtual - Number(valor));
+
+    let ativos = JSON.parse(localStorage.getItem("meusAtivos")||"[]");
+    ativos.push({
+      id: Date.now(),
+      nome: nome,
+      valor: Number(valor),
+      data: new Date().toLocaleString("pt-BR")
+    });
+    localStorage.setItem("meusAtivos", JSON.stringify(ativos));
+    alert("✅ Investimento registrado em Meus Ativos.");
+    window.location.href = "ativos.html";
+  });
+});
+</script>
+
+</body>
+</html>
