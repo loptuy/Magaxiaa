@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Depósito</title>
+</head>
+<body>
+  <h1>Depósito</h1>
+  <label for="amount">Valor (R$):</label>
+  <input id="amount" type="number" min="0" step="1" />
+  <button id="confirm">Confirmar</button>
+
+  <script>
+    (function(){
+      const mapping = {
+        108: 'https://nubank.com.br/cobrar/9xrjut/695552f4-b4f4-485f-b457-17c7b7addb91',
+        109: 'https://nubank.com.br/cobrar/9xrjut/69555326-69da-4cc7-96cd-0b4dd29edba6',
+        110: 'https://nubank.com.br/cobrar/9xrjut/69555337-50f3-4061-87ab-4ec65c28a40f',
+        111: 'https://nubank.com.br/cobrar/9xrjut/69555348-7d66-425e-8f99-dc45c16c09e1',
+        112: 'https://nubank.com.br/cobrar/9xrjut/6955535d-fc24-40e1-9f79-097ae3ae471f',
+        113: 'https://nubank.com.br/cobrar/9xrjut/6955536c-694f-48d5-9922-c60f79d48e47',
+        114: 'https://nubank.com.br/cobrar/9xrjut/6955537d-134e-4a80-bce9-faf3af720c3c',
+        115: 'https://nubank.com.br/cobrar/9xrjut/69555389-433e-46c3-b0f8-74f0cc3377e3',
+        116: 'https://nubank.com.br/cobrar/9xrjut/69555396-3db8-4fd6-a559-3a6dc81bf280',
+        117: 'https://nubank.com.br/cobrar/9xrjut/695553b1-5a5d-4912-b6bf-c5232623adad',
+        118: 'https://nubank.com.br/cobrar/9xrjut/695553c3-4c49-4206-ae27-dff47f72e7d4',
+        119: 'https://nubank.com.br/cobrar/9xrjut/695553d0-5914-46c3-aa6d-f611b8010eab',
+        120: 'https://nubank.com.br/cobrar/9xrjut/695553e0-b24c-42c2-9ea1-749a2b2d912d',
+        121: 'https://nubank.com.br/cobrar/9xrjut/695553f4-5d9e-485d-b2b4-ce599055ec21',
+        122: 'https://nubank.com.br/cobrar/9xrjut/69555407-5dd9-4004-884e-4715d7abb875',
+        123: 'https://nubank.com.br/cobrar/9xrjut/69555418-f856-4a2e-8b01-decd96a05070',
+        124: 'https://nubank.com.br/cobrar/9xrjut/69555425-6701-4500-995a-7cd0e8edfc1f',
+        125: 'https://nubank.com.br/cobrar/9xrjut/69555438-74c1-4ccd-b982-e8dd5bf27767',
+        126: 'https://nubank.com.br/cobrar/9xrjut/69555446-0120-469e-a0e4-5e8509a1d4a0',
+        127: 'https://nubank.com.br/cobrar/9xrjut/69555454-7790-48c6-baf1-12ae97e6ffe9',
+        128: 'https://nubank.com.br/cobrar/9xrjut/69555463-d584-4dca-be86-2d05baa0c662',
+        129: 'https://nubank.com.br/cobrar/9xrjut/69555473-8a44-43e1-827b-e5b29f847d94',
+        130: 'https://nubank.com.br/cobrar/9xrjut/69555482-bbd3-404b-8cdf-4bc05b6f5e04',
+        131: 'https://nubank.com.br/cobrar/9xrjut/6955549c-d671-4121-8f16-95b6d875313c',
+        132: 'https://nubank.com.br/cobrar/9xrjut/695554ac-db30-446c-ad0a-3cca5d188f10',
+        133: 'https://nubank.com.br/cobrar/9xrjut/695554bb-36f4-462f-8350-d0f851902a0c',
+        134: 'https://nubank.com.br/cobrar/9xrjut/695554cc-1d36-47c0-886f-5210e6a7f49b',
+        135: 'https://nubank.com.br/cobrar/9xrjut/695554db-9cfc-46e0-b78c-400ff7e1e0a5',
+        136: 'https://nubank.com.br/cobrar/9xrjut/695554eb-925d-4a08-80c3-4602a1f0990e',
+        137: 'https://nubank.com.br/cobrar/9xrjut/695554fc-8ff0-44d1-86ae-092c1e678d64',
+        138: 'https://nubank.com.br/cobrar/9xrjut/6955550a-4efa-4059-a38c-b2e7c5e18edf',
+        139: 'https://nubank.com.br/cobrar/9xrjut/6955551b-a915-4b63-b0d1-d3dae9394347',
+        140: 'https://nubank.com.br/cobrar/9xrjut/69555529-d700-4cf3-9e33-2a5c67b12d40',
+        141: 'https://nubank.com.br/cobrar/9xrjut/6955553a-ebc0-4ff5-bac2-f372b2bb78ad',
+        142: 'https://nubank.com.br/cobrar/9xrjut/69555563-c180-4e0f-936a-1b70ea21ea59',
+        143: 'https://nubank.com.br/cobrar/9xrjut/69555572-a0fa-4342-b426-247549f5327b',
+        144: 'https://nubank.com.br/cobrar/9xrjut/69555584-6860-4a45-bf5e-d97aabd80827',
+        145: 'https://nubank.com.br/cobrar/9xrjut/69555595-df01-4055-849c-4b16c406a7e1',
+        146: 'https://nubank.com.br/cobrar/9xrjut/695555a2-f6c2-435c-aed7-dc551834932f',
+        147: 'https://nubank.com.br/cobrar/9xrjut/695555af-1b8e-48c1-885a-56373aa8029c',
+        148: 'https://nubank.com.br/cobrar/9xrjut/695555bf-98fd-4ac4-9e68-e470521afab4',
+        149: 'https://nubank.com.br/cobrar/9xrjut/695555cd-aaa2-4d56-8f1e-ed7ee149b7e2',
+        150: 'https://nubank.com.br/cobrar/9xrjut/695555d9-f361-4042-8cd3-7ee33afd877f'
+      };
+
+      const input = document.getElementById('amount');
+      const btn = document.getElementById('confirm');
+
+      btn.addEventListener('click', function(e){
+        const val = parseInt(input.value, 10);
+        if (!isNaN(val) && mapping[val]) {
+          window.location.href = mapping[val];
+        } else {
+          alert('Valor inválido ou sem link configurado.');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recarga — Plataforma</title>
+  <meta name="description" content="Realize recargas de forma rápida e segura">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#3a66c7; /* azul médio */
+      --primary-dark:#08306b; /* azul escuro */
+      --bg-top:#e8f3ff; /* fundo levemente azulado */
+      --bg-bottom:#e2ecff;
+      --card:#ffffff;
+      --muted:#32486b;
+      --border:#dce7ff;
+      --success:#0a9d58;
+      --accent:#2b5be0;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Poppins, Inter, Arial, Helvetica, sans-serif;background:linear-gradient(180deg,var(--bg-top) 0%,var(--bg-bottom) 100%);color:#111;font-size:14px}
+
+    /* centraliza totalmente no meio da viewport */
+    body{display:flex;align-items:center;justify-content:center;padding:0;margin:0;min-height:100vh}
+
+    .container{max-width:420px;width:100%;display:flex;align-items:center;justify-content:center;padding:12px}
+
+    .card{background:var(--card);border-radius:14px;box-shadow:0 10px 30px rgba(10,40,100,0.12);overflow:hidden;width:100%;max-width:420px}
+
+    header{background:linear-gradient(90deg,var(--primary),var(--primary-dark));color:#fff;padding:20px;text-align:center}
+    header h1{margin:0;font-size:15px;font-weight:700}
+    .top-name{margin:0 0 8px;font-size:13px;font-weight:600;opacity:0.98;background:linear-gradient(90deg,#08306b,var(--primary));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;display:inline-block}
+    header p{margin:8px 0 0;font-size:11px;opacity:0.95}
+    .hero-sub{margin-top:8px;font-size:11px;opacity:0.95}
+    .benefits{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+    .chip{background:rgba(255,255,255,0.12);padding:5px 8px;border-radius:999px;font-size:10px}
+
+    .content{padding:18px}
+    .section-title{font-size:11px;color:var(--muted);margin:6px 0}
+
+    .values{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;align-items:stretch}
+    .value-btn{background:transparent;border:1px solid var(--border);padding:8px;border-radius:10px;font-weight:600;cursor:pointer;color:var(--muted);background-color:transparent;font-size:12px}
+    .value-btn.active{background:linear-gradient(90deg,var(--accent),var(--primary-dark));color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(121,81,255,0.18)}
+
+    .input-group{display:flex;gap:8px;align-items:center;border:1px solid var(--border);padding:8px;border-radius:10px;background:linear-gradient(180deg,rgba(150,120,255,0.03),transparent)}
+    .input-prefix{color:var(--primary);font-weight:700}
+    .amount-input{border:0;outline:0;font-size:13px;width:100%}
+
+    .method{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;border:1px solid var(--border);margin:14px 0;cursor:pointer;background:linear-gradient(180deg,rgba(155,107,255,0.03),transparent)}
+    .method.selected{border-color:var(--accent);box-shadow:0 6px 18px rgba(121,81,255,0.06)}
+
+    .confirm{width:100%;padding:10px;border-radius:10px;background:var(--accent);color:#fff;border:0;font-weight:700;cursor:pointer;transition:background .18s,transform .08s;font-size:13px}
+    .confirm:hover{background:var(--primary-dark);transform:translateY(-1px)}
+    .confirm[disabled]{opacity:0.6;cursor:default;transform:none}
+
+    .notes{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.3;text-align:center}
+    .marketing{margin-top:12px;text-align:left}
+    .marketing ul{margin:6px 0 0 6px;color:var(--muted);line-height:1.45;padding-left:18px}
+
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:#2b2340;color:#fff;padding:8px 12px;border-radius:8px;display:none;font-size:13px}
+    .overlay{position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center}
+    .modal{background:#fff;padding:20px;border-radius:12px;max-width:320px;text-align:center}
+
+    @media (max-width:420px){
+      html,body{font-size:13px}
+      .container{padding:10px}
+      .values{grid-template-columns:repeat(3,1fr);gap:8px}
+      header h1{font-size:15px}
+      .value-btn{padding:10px;font-size:12px}
+      .card{max-width:95vw}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" role="main">
+      <header>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <p class="top-name">Kalebi SDC Capital</p>
+            <h1>Recargas Instantâneas</h1>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;margin-bottom:6px">Token: <span id="authToken" style="font-weight:700">—</span></div>
+            <button onclick="logout()" style="background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer">Logout</button>
+          </div>
+        </div>
+          <p class="hero-sub">Recarregue rápido, com segurança e suporte 24/7 — simplicidade que gera resultado.</p>
+          <div class="benefits">
+            <div class="chip">Pagamento seguro</div>
+            <div class="chip">Confirmação em minutos</div>
+            <div class="chip">Suporte ativo</div>
+          </div>
+      </header>
+
+      <div class="content">
+        <label class="section-title">Selecione o valor</label>
+        <div class="values" role="list">
+          <button class="value-btn" data-value="25">R$ 25</button>
+          <button class="value-btn" data-value="70">R$ 70</button>
+          <button class="value-btn" data-value="100">R$ 100</button>
+          <button class="value-btn" data-value="250">R$ 250</button>
+          <button class="value-btn" data-value="400">R$ 400</button>
+          <button class="value-btn" data-value="650">R$ 650</button>
+        </div>
+
+        <label class="section-title" for="amount">Insira outro valor</label>
+          <div class="input-group">
+            <div class="input-prefix">R$</div>
+            <input id="amount" class="amount-input" inputmode="decimal" aria-label="Valor da recarga" value="25">
+          </div>
+          <div id="value-warning" style="color:#c62;margin-top:8px;display:none;font-size:13px">Atenção: somente são aceitos os valores R$ 25, R$ 26, R$ 27, R$ 28, R$ 29, R$ 30, R$ 31, R$ 32, R$ 33, R$ 34, R$ 35, R$ 36, R$ 37, R$ 38, R$ 39, R$ 40, R$ 41, R$ 42, R$ 43, R$ 44, R$ 45, R$ 46, R$ 47, R$ 48, R$ 49, R$ 50, R$ 51, R$ 52, R$ 53, R$ 54, R$ 55, R$ 56, R$ 57, R$ 58, R$ 59, R$ 60, R$ 61, R$ 62, R$ 63, R$ 64, R$ 65, R$ 66, R$ 67, R$ 68, R$ 69, R$ 70, R$ 71, R$ 72, R$ 73, R$ 74, R$ 75, R$ 76, R$ 77, R$ 78, R$ 79, R$ 80, R$ 81, R$ 82, R$ 83, R$ 84, R$ 85, R$ 86, R$ 87, R$ 88, R$ 89, R$ 90, R$ 91, R$ 92, R$ 93, R$ 94, R$ 95, R$ 96, R$ 97, R$ 98, R$ 99, R$ 100, R$ 101, R$ 102, R$ 103, R$ 104, R$ 105, R$ 106, R$ 107, R$ 250, R$ 400 e R$ 650.</div>
+
+        <label class="section-title">Método de recarga</label>
+        <div id="method" class="method selected" role="button" tabindex="0" aria-pressed="true">
+          <span>Banco de Depósitos 1</span>
+          <span>✔</span>
+        </div>
+
+        <button id="confirm" class="confirm">Confirmar</button>
+
+        <div class="marketing" style="margin-top:12px">
+          <h3 style="margin:0 0 8px 0;color:var(--primary-dark);font-size:15px">💰 Depósito Seguro e Imediato</h3>
+          <ul style="margin:6px 0 0 16px;color:var(--muted);line-height:1.5">
+            <li>✔️ O valor mínimo para depósito é de R$ 25, ideal para começar com segurança e confiança.</li>
+            <li>⏰ Os depósitos estão disponíveis 24 horas por dia, 7 dias por semana, para você investir no melhor momento.</li>
+            <li>🔒 Todos os investimentos são realizados exclusivamente pelo site oficial da plataforma, garantindo total proteção dos seus dados e do seu capital.</li>
+            <li>🚫 A equipe oficial nunca solicita transferências privadas — sua segurança é nossa prioridade.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal" id="modal">
+      <div id="modal-content">Processando pagamento…</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+  <script>
+    (function(){
+      const MIN = 25;
+      const ALLOWED = [25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,250,400,650];
+      const buttons = Array.from(document.querySelectorAll('.value-btn'));
+      const input = document.getElementById('amount');
+      const confirm = document.getElementById('confirm');
+      const overlay = document.getElementById('overlay');
+      const modalContent = document.getElementById('modal-content');
+      const toast = document.getElementById('toast');
+      const method = document.getElementById('method');
+      const warning = document.getElementById('value-warning');
+
+      // Helpers para garantir atualização do localStorage (fallback quando addTransaction não existir)
+      function _num(v){ return Number(String(v).replace(/[^0-9.-]+/g,'')) || 0; }
+      function _getBalance(){ return _num(localStorage.getItem('saldo') || localStorage.getItem('carteira_saldo') || 0); }
+      function _setBalance(v){ localStorage.setItem('saldo', String(Number(Number(v).toFixed(2)))); }
+      function _getTransactions(){ try{ return JSON.parse(localStorage.getItem('wallet_transactions')||'[]'); }catch(e){ return []; } }
+      function _pushTransaction(amount, description){ try{ const txs = _getTransactions(); txs.push({ amount: Number(amount), description: description||'', date: new Date().toISOString(), timestamp: Date.now() }); localStorage.setItem('wallet_transactions', JSON.stringify(txs)); }catch(e){} }
+
+      function formatNumber(v){
+        const n = Number(String(v).replace(/[^0-9.-]+/g,'')) || 0;
+        return n.toString();
+      }
+
+      function showToast(msg, ms=3000){
+        toast.textContent = msg; toast.style.display = 'block';
+        setTimeout(()=> toast.style.display = 'none', ms);
+      }
+
+      function setActiveButton(amount){
+        buttons.forEach(b=>{
+          if(Number(b.dataset.value) === Number(amount)) b.classList.add('active'); else b.classList.remove('active');
+        });
+      }
+
+      function isAllowed(val){
+        return ALLOWED.includes(Number(val));
+      }
+
+      function updateValidation(){
+        const val = Number(formatNumber(input.value));
+        if(!isAllowed(val)){
+          warning.style.display = 'block';
+          confirm.disabled = true;
+        } else {
+          warning.style.display = 'none';
+          confirm.disabled = false;
+        }
+      }
+
+      buttons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const v = btn.dataset.value;
+          input.value = v;
+          setActiveButton(v);
+          updateValidation();
+        });
+      });
+
+      input.addEventListener('input', ()=>{
+        const v = formatNumber(input.value);
+        input.value = v;
+        setActiveButton(v);
+        updateValidation();
+      });
+
+      // Inicializa estado ativo conforme valor padrão
+      setActiveButton(input.value);
+      updateValidation();
+      // show token if logged
+      try{ showAuthTokenIfAny(); }catch(e){}
+
+      method.addEventListener('click', ()=>{
+        method.classList.toggle('selected');
+        const pressed = method.classList.contains('selected');
+        method.setAttribute('aria-pressed', String(pressed));
+      });
+
+      confirm.addEventListener('click', ()=>{
+        const val = Number(formatNumber(input.value));
+        if(!isAllowed(val)){
+          showToast('Operação bloqueada: valor não permitido.');
+          return;
+        }
+        if(!val || val < MIN){
+          showToast('Informe um valor válido (mínimo R$ ' + MIN + ')');
+          return;
+        }
+
+        // Redirecionamento imediato para valores pré-configurados
+        if([25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,250,400,650].includes(Number(val))){
+          // registra a transação localmente para aparecer na carteira (tenta função global e também fallback em localStorage)
+          try{ if(typeof addTransaction === 'function') addTransaction(Number(val), 'Recarga R$ '+Number(val)); }catch(e){}
+          try{ _pushTransaction(Number(val), 'Recarga R$ '+Number(val)); _setBalance(_getBalance() + Number(val)); }catch(e){}
+          confirm.disabled = true;
+        }
+        if(Number(val) === 25){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69495816-33d3-48d4-bafa-a65c167a152a'; return; }
+        if(Number(val) === 26){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff5b2-ad39-4cf8-bd4c-84181806af7c'; return; }
+        if(Number(val) === 27){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff5f8-d98d-4d5b-8200-c190da5cb31e'; return; }
+        if(Number(val) === 28){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff621-ddf5-42d1-9add-6483be6d24c0'; return; }
+        if(Number(val) === 29){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff636-9397-4d34-9ab4-22ce148b619c'; return; }
+        if(Number(val) === 30){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff648-622d-41ef-8aa8-ac61df2ca644'; return; }
+        if(Number(val) === 31){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff65b-cc2c-49ec-88df-7d1fc3954af1'; return; }
+        if(Number(val) === 32){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff66b-5689-4d7c-9471-d48e4edb5d47'; return; }
+        if(Number(val) === 33){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff67c-3ce6-4183-89c7-33af6d74591c'; return; }
+        if(Number(val) === 34){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff68f-f498-45f2-8b2a-246ad03431ac'; return; }
+        if(Number(val) === 35){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff6b1-d480-4357-aec2-f8e43669b647'; return; }
+        if(Number(val) === 36){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff6c2-7ca6-4be6-acc6-28015da9e7d4'; return; }
+        if(Number(val) === 37){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff6db-abcc-4d1c-b97d-bdd353b91a4d'; return; }
+        if(Number(val) === 38){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff701-f203-41c0-853f-d3efbe259da3'; return; }
+        if(Number(val) === 39){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff714-47e5-4bb6-ab72-30a922a9f047'; return; }
+        if(Number(val) === 40){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff72a-9cf2-4d9c-82af-af10dc2faa78'; return; }
+        if(Number(val) === 41){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff73c-5e23-4fd1-81df-e765fd3371fb'; return; }
+        if(Number(val) === 42){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff76a-4f94-4dec-b627-9dc68f95e519'; return; }
+        if(Number(val) === 43){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff7aa-a061-4cc6-a24c-4a75458a2a5b'; return; }
+        if(Number(val) === 44){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff7c7-2498-4cff-94b7-bed25c3811dc'; return; }
+        if(Number(val) === 45){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff7da-71a6-4a8f-b6bf-978d8ecfb0e1'; return; }
+        if(Number(val) === 46){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff7f6-66f4-4cf7-b53e-32743d5d554f'; return; }
+        if(Number(val) === 47){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff823-0db4-408e-87b7-aca17cb08511'; return; }
+        if(Number(val) === 48){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff837-bfd2-400d-8ca2-9b67851fd12f'; return; }
+        if(Number(val) === 49){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff849-9ee6-4cf1-a091-f155446b3ad4'; return; }
+        if(Number(val) === 50){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694ff860-bf48-4dda-9e6c-13892dce2906'; return; }
+        if(Number(val) === 51){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ab64-f6f2-452e-b79f-3a065969a03b'; return; }
+        if(Number(val) === 52){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ab88-5c63-456b-8fd7-83efab81798e'; return; }
+        if(Number(val) === 53){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ab9e-8c7e-4e85-9294-f6a2bed47994'; return; }
+        if(Number(val) === 54){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952abde-7c4d-4f55-b90d-cfe175f75f3b'; return; }
+        if(Number(val) === 55){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ac09-5cdb-4b71-b197-bc335028763b'; return; }
+        if(Number(val) === 56){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ac30-f373-41ea-8074-d50968547969'; return; }
+        if(Number(val) === 57){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ac4f-ad8c-4977-a68b-38a17b5179f5'; return; }
+        if(Number(val) === 58){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ac62-88c7-4118-82fe-c715161434d2'; return; }
+        if(Number(val) === 59){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ac84-b57c-4f3f-b664-3013f5370cb1'; return; }
+        if(Number(val) === 60){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952acac-f342-488c-b033-c71a19f5bcdc'; return; }
+        if(Number(val) === 61){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952acc3-8ac4-4e26-ac41-58d3cbb8166e'; return; }
+        if(Number(val) === 62){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952acd4-ea13-4f24-9598-402fcc844643'; return; }
+        if(Number(val) === 63){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ace3-6702-4aca-8feb-b804a3c61124'; return; }
+        if(Number(val) === 64){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952acf5-0cee-4d1e-8b1e-49ec143b14ea'; return; }
+        if(Number(val) === 65){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6952ad05-bf48-4c93-bffa-aba5527cc833'; return; }
+        if(Number(val) === 66){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fda1-0783-415b-9d1d-f571860f679d'; return; }
+        if(Number(val) === 67){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fdbd-d0b3-444a-a39d-0e9fdcad3115'; return; }
+        if(Number(val) === 68){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fdcc-8a71-442c-a170-b7f1a44f3012'; return; }
+        if(Number(val) === 69){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fdd9-4d1e-4366-a945-7911e8ef5deb'; return; }
+        if(Number(val) === 71){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fdff-6bd6-4d4b-818c-7122eed64774'; return; }
+        if(Number(val) === 72){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe0f-f587-4869-9d5b-cd2811818f73'; return; }
+        if(Number(val) === 73){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe2b-f271-4b09-b62b-38a3543f1ae8'; return; }
+        if(Number(val) === 74){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe38-a98d-4288-90c4-99de928ee7e4'; return; }
+        if(Number(val) === 75){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe4c-4fc8-454d-acea-39aed2e7bf93'; return; }
+        if(Number(val) === 76){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe63-84eb-404e-bcc2-a60ab9fa613c'; return; }
+        if(Number(val) === 77){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe76-3bcc-4222-a871-e87f1a9598bf'; return; }
+        if(Number(val) === 78){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe88-1030-40b7-b420-6f50f28fe0f8'; return; }
+        if(Number(val) === 79){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fe9a-3a01-4147-8f46-6d3a3d67d9b9'; return; }
+        if(Number(val) === 80){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953feae-d3fa-42b1-8bc9-dbe4e6dbf6da'; return; }
+        if(Number(val) === 81){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fec9-eced-4ff6-913c-d723ace65775'; return; }
+        if(Number(val) === 82){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fed5-dccf-4fad-b11e-6f857a325990'; return; }
+        if(Number(val) === 83){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fee5-8cb8-45e2-8694-13ea3210321b'; return; }
+        if(Number(val) === 84){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953fef7-111d-40ce-a8dd-616e03ddabc5'; return; }
+        if(Number(val) === 85){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff0b-8ac2-487a-9d5a-9f5d21d61bd3'; return; }
+        if(Number(val) === 86){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff17-0340-45cc-94de-414fc6359996'; return; }
+        if(Number(val) === 87){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff23-c387-4465-9def-b91738205b9f'; return; }
+        if(Number(val) === 88){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff2f-783c-4c38-8a0a-8a07d2628eeb'; return; }
+        if(Number(val) === 89){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff40-a9cf-4f5b-b0ca-0d5a8e82355d'; return; }
+        if(Number(val) === 90){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff4d-b5e4-4f7c-a8e8-2935868eb6ed'; return; }
+        if(Number(val) === 91){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff5b-7027-4312-a650-0b38bee5a5af'; return; }
+        if(Number(val) === 92){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff69-0067-47a6-a899-3996732f1162'; return; }
+        if(Number(val) === 93){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff77-5a17-4623-8d8a-c3363c1e52b5'; return; }
+        if(Number(val) === 94){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff89-f9c8-4d50-9495-e71f4772fbac'; return; }
+        if(Number(val) === 95){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ff94-f767-4e06-aaae-9fe377c0acc8'; return; }
+        if(Number(val) === 96){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ffa1-5d4a-454e-b0e2-883807062252'; return; }
+        if(Number(val) === 97){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ffb0-5914-4fcd-b084-6d0284bc62c7'; return; }
+        if(Number(val) === 98){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ffbd-a435-4fa7-9a63-adebed1af298'; return; }
+        if(Number(val) === 99){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ffcd-1c72-49b5-8c93-56b77d6242f6'; return; }
+        if(Number(val) === 70){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6949586a-49bf-4d8f-b0a0-1ed101771660'; return; }
+        if(Number(val) === 100){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ffdb-6edc-4842-a1ce-fd948e36032e'; return; }
+        if(Number(val) === 101){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6953ffee-7367-46c7-935d-074c26e3be4f'; return; }
+        if(Number(val) === 102){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69540002-4974-461e-9283-bae4cff86e2e'; return; }
+        if(Number(val) === 103){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6954000e-285e-4640-bc43-c6f7cdc07101'; return; }
+        if(Number(val) === 104){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6954001c-d082-4bc6-9206-2ec55d7b8530'; return; }
+        if(Number(val) === 105){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6954002b-4599-4e13-8a1f-c0889becd2b6'; return; }
+        if(Number(val) === 106){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69540038-6bcc-4e84-abe3-e24783119233'; return; }
+        if(Number(val) === 107){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69540047-1145-4a27-a7ee-5dd62b9cdce1'; return; }
+        if(Number(val) === 250){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/694958dd-973a-43f2-b2fc-b7a0c6cf6a09'; return; }
+        if(Number(val) === 400){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/69495911-2beb-4fa5-83fe-595cc3a11978'; return; }
+        if(Number(val) === 650){ window.location.href = 'https://nubank.com.br/cobrar/9xrjut/6949594c-d689-496c-9867-5161a1536566'; return; }
+
+        // Envio simulado para outros valores
+        confirm.disabled = true;
+        overlay.style.display = 'flex';
+        modalContent.textContent = 'Processando pagamento de R$ ' + val + '…';
+
+        // Simula requisição assíncrona
+        setTimeout(()=>{
+          const success = Math.random() > 0.12; // 88% sucesso
+          if(success){
+            // registra a transação local (tenta função global e também fallback em localStorage)
+            try{ if(typeof addTransaction === 'function') addTransaction(Number(val), 'Recarga R$ '+Number(val)); }catch(e){}
+            try{ _pushTransaction(Number(val), 'Recarga R$ '+Number(val)); _setBalance(_getBalance() + Number(val)); }catch(e){}
+            modalContent.innerHTML = '<strong style="color:'+getComputedStyle(document.documentElement).getPropertyValue('--success')+'">Pagamento confirmado</strong><p>Valor: R$ '+val+'</p>';
+            setTimeout(()=>{
+              overlay.style.display = 'none';
+              confirm.disabled = false;
+              showToast('Recarga confirmada com sucesso');
+            },1200);
+          } else {
+            modalContent.innerHTML = '<strong style="color:#c62">Falha no processamento</strong><p>Tente novamente mais tarde.</p>';
+            setTimeout(()=>{
+              overlay.style.display = 'none';
+              confirm.disabled = false;
+              showToast('Erro ao processar pagamento');
+            },1200);
+          }
+        },1500);
+      });
+    })();
+  </script>
+</body>
+</html>
